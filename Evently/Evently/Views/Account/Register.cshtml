@@ -1,85 +1,171 @@
 ﻿@{
     Layout = null;
 }
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register</title>
+    <title>Evently | Create Account</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <partial name="_Background" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+                
+            background: radial-gradient( circle at 30% 50%,
+            #8a2be2 0%, 
+            #4b0082 25%,
+            #1a0033 60%,
+            #0a0015 100%
+            );
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 650px; 
+            border-radius: 25px !important;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 60px 90px rgba(0,0,0,0.6);
+        }
+
+        .card-header-vibrant {
+            background: linear-gradient(90deg, #4b0082 0%, #8a2be2 100%);
+            padding: 30px 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .form-content {
+            padding: 40px 50px !important;
+        }
+
+        .label-text {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .w3-input, .w3-select {
+            border: 1.5px solid #eee !important;
+            padding: 12px !important;
+            border-radius: 12px !important;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            background-color: #fafafa !important;
+        }
+
+        .btn-signup {
+            background-color: #8a2be2 !important;
+            color: white !important;
+            border-radius: 12px !important;
+            font-weight: bold;
+            padding: 16px !important;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(125, 42, 232, 0.3);
+        }
+
+        .signup-link {
+            color: #8a2be2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .terms-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
 </head>
-<body class="w3-purple">
+<body>
 
-    <div class="w3-card w3-white w3-round-large w3-padding-large" style="max-width:480px; margin:5% auto;">
+    <div class="auth-container">
 
-        <div class="w3-center">
-            <img src="~/eventlylogo.jpg" style="width:200px; border-radius:40px; height:50px; object-fit:cover;">
+        <div class="login-card w3-card w3-white">
+            <div class="card-header-vibrant">
+                Create Account
+            </div>
+
+            <div class="form-content">
+                <form method="post">
+
+                    <div class="w3-row">
+                        <div class="w3-half" style="padding-right:10px">
+                            <label class="label-text">First Name</label>
+                            <input type="text" name="firstName" class="w3-input" placeholder="Dark" required>
+                        </div>
+                        <div class="w3-half" style="padding-left:10px">
+                            <label class="label-text">Last Name</label>
+                            <input type="text" name="lastName" class="w3-input" placeholder="System" required>
+                        </div>
+                    </div>
+
+                    <label class="label-text">Role</label>
+                    <select class="w3-select" name="role" required>
+                        <option value="" disabled selected>Choose role...</option>
+                        <option>Marksman</option>
+                        <option>Tank</option>
+                        <option>Support</option>
+                        <option>Jungle</option>
+                        <option>Admin</option>
+                        <option>Participant</option>
+                        <option>Organizer</option>
+                    </select>
+
+                    <label class="label-text">Email Address</label>
+                    <input type="email" name="email" class="w3-input" placeholder="you@example.com" required>
+
+                    <div class="w3-row">
+                        <div class="w3-half" style="padding-right:10px">
+                            <label class="label-text">Password</label>
+                            <input type="password" name="password" class="w3-input" placeholder="••••••••" required>
+                        </div>
+                        <div class="w3-half" style="padding-left:10px">
+                            <label class="label-text">Confirm Password</label>
+                            <input type="password" name="confirmPassword" class="w3-input" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <input type="checkbox" id="terms" name="terms" class="w3-check" required>
+                        <label for="terms" class="terms-text"> I agree to the <a href="/terms" class="signup-link">Terms of service</a></label>
+                    </div>
+
+                    <button type="submit" class="w3-button w3-block btn-signup shadow">Create Account</button>
+
+                    <div class="w3-center w3-margin-top" style="font-size: 1rem; color: #888;">
+                        Already have an account?
+                        <a asp-controller="Account" asp-action="Index" class="signup-link">Sign In</a>
+                    </div>
+                </form>
+            </div>
         </div>
 
-
-        <h4 class="w3-center">Create your account</h4>
-        <p class="w3-center w3-text-grey">Fill in the details below to get started</p>
-        <hr>
-
-        <form>
-            <div class="w3-row w3-section">
-                <div class="w3-col s6" style="padding-right:8px">
-                    <label>First name</label>
-                    <input type="text" class="w3-input w3-border w3-round" placeholder="Dark">
-                </div>
-                <div class="w3-col s6" style="padding-left:8px">
-                    <label>Last name</label>
-                    <input type="text" class="w3-input w3-border w3-round" placeholder="System">
-                </div>
-            </div>
-
-            <div class="w3-section">
-                <label>Role</label>
-                <select class="w3-select w3-border w3-round">
-                    <option>Choose role...</option>
-                    <option>Marksman</option>
-                    <option>Tank</option>
-                    <option>Support</option>
-                    <option>Jungle</option>
-                    <option>Admin</option>
-                    <option>Participant</option>
-                    <option>Organizer</option>
-                </select>
-            </div>
-
-            <div class="w3-section">
-                <label>Email address</label>
-                <input type="email" class="w3-input w3-border w3-round" placeholder="you@example.com">
-            </div>
-
-            <div class="w3-row w3-section">
-                <div class="w3-col s6" style="padding-right:8px">
-                    <label>Password</label>
-                    <input type="password" class="w3-input w3-border w3-round" placeholder="••••••••">
-                </div>
-                <div class="w3-col s6" style="padding-left:8px">
-                    <label>Confirm password</label>
-                    <input type="password" class="w3-input w3-border w3-round" placeholder="••••••••">
-                </div>
-            </div>
-
-            <hr>
-
-            <div class="w3-section">
-                <input type="checkbox" id="terms" class="w3-check">
-                <label for="terms"> I agree to the <a href="/terms">Terms of service</a></label>
-            </div>
-
-            <button type="submit" class="w3-button w3-blue w3-round w3-block w3-section">
-                Create account
-            </button>
-
-            <p class="w3-center w3-text-grey">
-                Already have an account? <a asp-controller="Login">Sign in</a>
-            </p>
-        </form>
     </div>
-
 </body>
 </html>

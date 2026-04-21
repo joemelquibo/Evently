@@ -9,121 +9,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Evently | Sign In</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
+    <partial name="_Background" />
     <style>
-        :root {
-            --bg-dark: #0d0b21;
-            --bg-purple: #3e1f81;
-            --btn-purple: #7d2ae8;
-        }
+            .auth-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 120px;
+                width: 100%;
+                max-width: 1400px;
+                padding: 40px;
+                min-height: 100vh; /* Ensures it centers vertically on the screen */
+            }
 
-        body, html {
-            height: 100%;
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            /* Vibrant Purple Beam Gradient */
-            background: radial-gradient(circle at 30% 50%, var(--bg-purple) 0%, var(--bg-dark) 70%, #000 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+            .brand-border-wrap {
+                padding: 3px;
+                border-radius: 50%;
+                background: linear-gradient(45deg, #fbca11, #ff007a, #7d2ae8, #00d4ff);
+                box-shadow: 0 0 60px rgba(125, 42, 232, 0.4);
+            }
+            body, html {
+                height: 100%;
+                margin: 0;
+                background: radial-gradient(
+                    circle at 30% 50%, 
+                    #8a2be2 0%,      /* Vibrant center */
+                    #1a0033 45%,     /* Deep purple transition */
+                    #0a0015 100%     /* Black outer edge */
+                );
+                background-attachment: fixed;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
 
-        .auth-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 120px; /* Large gap for wider elements */
-            width: 100%;
-            max-width: 1400px;
-            padding: 40px;
-        }
+            .brand-circle {
+                width: 500px;
+                height: 500px;
+                background: #ffffff;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+            }
 
-        /* 1. THIN RAINBOW BORDER & WIDE LOGO BOX */
-        .brand-border-wrap {
-            padding: 3px; /* Very thin rainbow edge */
-            border-radius: 50%;
-            background: linear-gradient(45deg, #fbca11, #ff007a, #7d2ae8, #00d4ff);
-            box-shadow: 0 0 60px rgba(125, 42, 232, 0.4);
-        }
+            .placeholder-text {
+                font-size: 4rem;
+                font-weight: 800;
+                color: #ececec;
+                text-transform: uppercase;
+                letter-spacing: 8px;
+            }
 
-        .brand-circle {
-            width: 500px; /* Large, wide circle */
-            height: 500px;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
+            .login-card {
+                width: 550px;
+                max-width: 550px;
+                border-radius: 25px !important;
+                overflow: hidden;
+                border: none;
+                box-shadow: 0 60px 90px rgba(0,0,0,0.6);
+            }
 
-        .placeholder-text {
-            font-size: 4rem;
-            font-weight: 800;
-            color: #ececec;
-            text-transform: uppercase;
-            letter-spacing: 8px;
-        }
+            .card-header-vibrant {
+                background: linear-gradient(90deg, #4b0082 0%, #8a2be2 100%);
+                padding: 40px;
+                color: white;
+                font-weight: bold;
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
 
-        /* 2. WIDER LOGIN CARD */
-        .login-card {
-            width: 550px;
-            max-width 550px; /* Wide form factor */
-            border-radius: 25px !important;
-            overflow: hidden;
-            border: none;
-            box-shadow: 0 60px 90px rgba(0,0,0,0.6);
-        }
+            .form-content {
+                padding: 50px 60px !important;
+            }
 
-        .card-header-vibrant {
-            /* Matched gradient from your image */
-            background: linear-gradient(90deg, #4b0082 0%, #8a2be2 100%);
-            padding: 40px;
-            color: white;
-            font-weight: bold;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
-        }
+            .label-text {
+                font-size: 0.85rem;
+                font-weight: 800;
+                color: #6c757d;
+                display: block;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+            }
 
-        .form-content {
-            padding: 50px 60px !important; /* Wide internal spacing */
-        }
+            .w3-input {
+                border: 1.5px solid #eee !important;
+                padding: 15px !important;
+                border-radius: 12px !important;
+                margin-bottom: 30px;
+                font-size: 1rem;
+                background-color: #fafafa !important;
+            }
 
-        .label-text {
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: #6c757d;
-            display: block;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
+            /* FIXED BUTTON STYLING */
+            .btn-signin {
+                background-color: #8a2be2 !important; /* Set directly since variable was missing */
+                color: white !important;
+                border-radius: 12px !important;
+                font-weight: bold;
+                padding: 16px !important;
+                font-size: 1.2rem;
+                margin-top: 10px;
+                box-shadow: 0 4px 15px rgba(125, 42, 232, 0.3);
+                transition: transform 0.2s, opacity 0.2s;
+                border: none;
+            }
 
-        .w3-input {
-            border: 1.5px solid #eee !important;
-            padding: 15px !important;
-            border-radius: 12px !important;
-            margin-bottom: 30px;
-            font-size: 1rem;
-            background-color: #fafafa !important;
-        }
+                .btn-signin:hover {
+                    opacity: 0.9;
+                    transform: translateY(-1px);
+                }
 
-        .btn-signin {
-            background-color: var(--btn-purple) !important;
-            color: white !important;
-            border-radius: 12px !important;
-            font-weight: bold;
-            padding: 16px !important;
-            font-size: 1.2rem;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(125, 42, 232, 0.3);
-        }
+            .signup-link {
+                color: #8a2be2;
+                text-decoration: none;
+                font-weight: bold;
+            }
 
-        .signup-link {
-            color: #8a2be2;
-            text-decoration: none;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -153,7 +157,7 @@
                         <a href="#" style="color: #8a2be2; text-decoration: none; font-weight: bold; font-size: 0.9rem;">Forgot password?</a>
                     </div>
 
-                    <button type="submit" class="w3-button w3-block btn-signin shadow">Sign In</button>
+                    <button type="submit" class="w3-button w3-block btn-signin">Sign In</button>
 
                     <div class="w3-center w3-margin-top" style="font-size: 1rem; color: #888;">
                         Don't have an account?
