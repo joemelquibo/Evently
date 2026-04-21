@@ -15,9 +15,15 @@ namespace Evently.Models
         public required string PhoneNum { get; set; }
 
         [ForeignKey("RoleId")]
-        public required Roles RoleId { get; set; }
+        public required Roles Role { get; set; } 
 
-        public required string Status {  get; set; }
+        public UserStatus Status { get; set; }
+        public enum UserStatus
+        {
+            Active,
+            Inactive,
+            Suspended
+        }
 
     }
 }

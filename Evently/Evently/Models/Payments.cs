@@ -8,6 +8,7 @@ namespace Evently.Models
         public int PaymentId {  get; set; }
         public required decimal PayAmt { get; set; }
         public required string PayMethod { get; set; }
+        public PaymentStatus Status { get; set; }
         public enum PaymentStatus
         {
             Pending,
