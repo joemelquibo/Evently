@@ -17,6 +17,5 @@ namespace Evently.Models
             Confirmed,
             Cancelled
         }
-
     }
 }
