@@ -15,6 +15,6 @@ namespace Evently.Models
         public required Roles RoleId { get; set; }
 
         public required string Status {  get; set; }
-        public required DateTime CreatedAt { get; set; } = DateTime.Now;
+
     }
 }
