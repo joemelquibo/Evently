@@ -4,9 +4,12 @@ namespace Evently.Models
 {
     public class Registrations
     {
+        [Key]
         public int registration_Id { get; set; }
-        public int event_Id { get; set; }
-        public int user_Id { get; set; }
+        [ForeignKey("EventId")]
+        public int EventId { get; set; }
+        [ForeignKey("UserId")]
+        public int UserId{ get; set; }
         public DateTime registration_date { get; set; }
         public enum RegistrationStatus
         {
