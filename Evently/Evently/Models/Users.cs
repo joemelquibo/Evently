@@ -18,5 +18,6 @@ namespace Evently.Models
         public required Roles RoleId { get; set; }
 
         public required string Status {  get; set; }
+
     }
 }
