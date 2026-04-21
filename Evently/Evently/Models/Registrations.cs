@@ -5,7 +5,7 @@ namespace Evently.Models
     public class Registrations
     {
         [Key]
-        public int registration_Id { get; set; }
+        public int RegistrationId { get; set; }
         [ForeignKey("EventId")]
         public int EventId { get; set; }
         [ForeignKey("UserId")]

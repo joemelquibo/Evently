@@ -8,7 +8,12 @@ namespace Evently.Models
         public int PaymentId {  get; set; }
         public required decimal PayAmt { get; set; }
         public required string PayMethod { get; set; }
-        public required string PayStatus { get; set; }
+        public enum PaymentStatus
+        {
+            Pending,
+            Completed,
+            Failed
+        }
 
         [ForeignKey("UserId")]
         public required Users Users { get; set; }
