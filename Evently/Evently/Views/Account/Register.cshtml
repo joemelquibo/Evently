@@ -1,0 +1,85 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body class="w3-purple">
+
+    <div class="w3-card w3-white w3-round-large w3-padding-large" style="max-width:480px; margin:5% auto;">
+
+        <div class="w3-center">
+            <img src="~/eventlylogo.jpg" style="width:200px; border-radius:40px; height:50px; object-fit:cover;">
+        </div>
+
+
+        <h4 class="w3-center">Create your account</h4>
+        <p class="w3-center w3-text-grey">Fill in the details below to get started</p>
+        <hr>
+
+        <form>
+            <div class="w3-row w3-section">
+                <div class="w3-col s6" style="padding-right:8px">
+                    <label>First name</label>
+                    <input type="text" class="w3-input w3-border w3-round" placeholder="Dark">
+                </div>
+                <div class="w3-col s6" style="padding-left:8px">
+                    <label>Last name</label>
+                    <input type="text" class="w3-input w3-border w3-round" placeholder="System">
+                </div>
+            </div>
+
+            <div class="w3-section">
+                <label>Role</label>
+                <select class="w3-select w3-border w3-round">
+                    <option>Choose role...</option>
+                    <option>Marksman</option>
+                    <option>Tank</option>
+                    <option>Support</option>
+                    <option>Jungle</option>
+                    <option>Admin</option>
+                    <option>Participant</option>
+                    <option>Organizer</option>
+                </select>
+            </div>
+
+            <div class="w3-section">
+                <label>Email address</label>
+                <input type="email" class="w3-input w3-border w3-round" placeholder="you@example.com">
+            </div>
+
+            <div class="w3-row w3-section">
+                <div class="w3-col s6" style="padding-right:8px">
+                    <label>Password</label>
+                    <input type="password" class="w3-input w3-border w3-round" placeholder="••••••••">
+                </div>
+                <div class="w3-col s6" style="padding-left:8px">
+                    <label>Confirm password</label>
+                    <input type="password" class="w3-input w3-border w3-round" placeholder="••••••••">
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="w3-section">
+                <input type="checkbox" id="terms" class="w3-check">
+                <label for="terms"> I agree to the <a href="/terms">Terms of service</a></label>
+            </div>
+
+            <button type="submit" class="w3-button w3-blue w3-round w3-block w3-section">
+                Create account
+            </button>
+
+            <p class="w3-center w3-text-grey">
+                Already have an account? <a asp-controller="Login">Sign in</a>
+            </p>
+        </form>
+    </div>
+
+</body>
+</html>
