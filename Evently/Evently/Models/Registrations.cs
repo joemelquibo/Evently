@@ -5,12 +5,14 @@ namespace Evently.Models
     public class Registrations
     {
         [Key]
-        public int registration_Id { get; set; }
+        public int RegistrationId { get; set; }
         [ForeignKey("EventId")]
-        public int EventId { get; set; }
+        public required Events Event { get; set; }
         [ForeignKey("UserId")]
-        public int UserId{ get; set; }
+        public required Users User{ get; set; }
         public DateTime registration_date { get; set; }
+
+        public RegistrationStatus Status { get; set; }
         public enum RegistrationStatus
         {
             Pending,

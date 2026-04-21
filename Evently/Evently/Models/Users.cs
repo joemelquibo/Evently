@@ -8,13 +8,22 @@ namespace Evently.Models
         public int UserId { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
+
+        [EmailAddress(ErrorMessage = "Invalid Email format.")]
         public required string Email { get; set; }
         public required string Password { get; set; }
         public required string PhoneNum { get; set; }
-        [ForeignKey("RoleId")]
-        public required Roles RoleId { get; set; }
 
-        public required string Status {  get; set; }
+        [ForeignKey("RoleId")]
+        public required Roles Role { get; set; } 
+
+        public UserStatus Status { get; set; }
+        public enum UserStatus
+        {
+            Active,
+            Inactive,
+            Suspended
+        }
 
     }
 }
