@@ -14,6 +14,10 @@ namespace Evently.Models
         public DateTime checkInTime { get; set; }
         [ForeignKey("UserID")]
         public int VerifiedBy { get; set; }
+<<<<<<< HEAD
+=======
+        public AttendanceStatus Status { get; set; }
+>>>>>>> ddf89a47745a32473fe9dc18caeebeb59841e2aa
         public enum AttendanceStatus
         {
             Present,

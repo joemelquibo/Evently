@@ -15,6 +15,10 @@ namespace Evently.Models
         public int Capacity { get; set; }
         [ForeignKey("UserId")]
         public int CreatedBy { get; set; }
+<<<<<<< HEAD
+=======
+        public EventStatus Status { get; set; }
+>>>>>>> ddf89a47745a32473fe9dc18caeebeb59841e2aa
         public enum EventStatus
         {
             Scheduled,
