@@ -1,0 +1,9 @@
+# Compiled output
+bin/
+obj/
+
+# User-specific files (Visual Studio)
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
