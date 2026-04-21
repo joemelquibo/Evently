@@ -1,7 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Evently.DB;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbCont
 
 var app = builder.Build();
 
