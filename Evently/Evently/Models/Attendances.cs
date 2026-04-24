@@ -12,7 +12,7 @@ namespace Evently.Models
         [ForeignKey("UserId")]
         public required Users User { get; set; }
         public DateTime checkInTime { get; set; }
-        [ForeignKey("UserId")]
+        [ForeignKey("CheckerId")]
         public required Users VerifiedBy { get; set; }
         public AttendanceStatus Status { get; set; }
         public enum AttendanceStatus

@@ -17,6 +17,8 @@ namespace Evently.Controllers
         {
             return View();
         }
+
+        //Sign in Logic
         [HttpPost]
         public IActionResult Index(string email, string password)
         {
@@ -57,10 +59,31 @@ namespace Evently.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
         public IActionResult Register()
         {
-            return View(); // This looks for Views/Account/Register.cshtml
+            return View();
+        }
+        //Register Logic
+        [HttpPost]
+        public IActionResult Register(string firstName, string lastName, string email, string password, /*string confpassword,*/ string phoneNum, Roles.RoleName role, Users.UserStatus status = Users.UserStatus.Active)
+        {
+            var roleEntity = _context.Roles.FirstOrDefault(r => r.role == role);
+
+            var newUser = new Users 
+            { 
+                FirstName= firstName,
+                LastName= lastName,
+                Email= email,
+                Password= password,
+                //ConfirmPassword= confpassword,
+                PhoneNum= phoneNum,
+                Role = roleEntity,
+                Status = status
+            };
+
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+            return View("Index");
         }
 
     }
