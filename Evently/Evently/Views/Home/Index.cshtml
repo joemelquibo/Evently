@@ -1,8 +1,102 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+<div class="dashboard-wrap">
+
+    <!-- Stat Cards -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-label">Total Events</div>
+            <div class="stat-value">24</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🏷️</div>
+            <div class="stat-label">Active Events</div>
+            <div class="stat-value">8</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👤</div>
+            <div class="stat-label">Participants</div>
+            <div class="stat-value">1,027</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-label">Attendance Rate</div>
+            <div class="stat-value">92%</div>
+        </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-row">
+
+        <!-- Recent Events -->
+        <div class="dash-card">
+            <div class="dash-card-title">Recent Events</div>
+            <table class="events-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date/Time</th>
+                        <th>Venue</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tech Startup Summit</td>
+                        <td>Sep 16, 3:00 AM</td>
+                        <td>—</td>
+                        <td><span class="badge badge-scheduled">Scheduled</span></td>
+                    </tr>
+                    <tr>
+                        <td>Company Team Building</td>
+                        <td>Sep 17, 8:00 AM</td>
+                        <td>Boracay</td>
+                        <td><span class="badge badge-ongoing">Ongoing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Company Team Building</td>
+                        <td>Sep 17, 8:00 AM</td>
+                        <td>Desktop 1</td>
+                        <td><span class="badge badge-completed">Completed</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Attendance Overview -->
+        <div class="dash-card">
+            <div class="dash-card-title">Attendance Overview</div>
+            <div class="donut-wrap">
+                <svg width="110" height="110" viewBox="0 0 110 110">
+                    <circle cx="55" cy="55" r="42" fill="none" stroke="#ede9fe" stroke-width="14" />
+                    <circle class="donut-ring" cx="55" cy="55" r="42" fill="none"
+                            stroke="#7c3aed" stroke-width="14"
+                            stroke-dasharray="249 264"
+                            stroke-linecap="round" />
+                    <text x="55" y="60" text-anchor="middle"
+                          font-family="Plus Jakarta Sans" font-size="15" font-weight="800" fill="#3d0072">92%</text>
+                </svg>
+            </div>
+            <div class="att-row">
+                <span class="att-label">Present</span>
+                <span class="att-value">970</span>
+            </div>
+            <div class="att-row">
+                <span class="att-label">Absent</span>
+                <span class="att-value">57</span>
+            </div>
+            <button class="btn-view">View Details</button>
+        </div>
+
+    </div>
 </div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
