@@ -76,9 +76,6 @@ namespace Evently.Controllers
         [HttpPost]
         public IActionResult Register(string firstName, string lastName, string email, string password, string confpassword, string phoneNum, Roles.RoleName role, Users.UserStatus status = Users.UserStatus.Active)
         {
-<<<<<<< HEAD
-            var roleEntity = _context.Roles.FirstOrDefault(r => r.Role == role);
-=======
             if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ||
                 string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
@@ -98,9 +95,7 @@ namespace Evently.Controllers
                 return View();
             }
 
-            var roleEntity = _context.Roles.FirstOrDefault(r => r.role == role);
->>>>>>> 99f0a4692729f3bad660fed658e332edc00107c1
-
+            var roleEntity = _context.Roles.FirstOrDefault(r => r.Role == role);
             if (roleEntity == null)
             {
                 ViewBag.Error = "Selected role not found.";
