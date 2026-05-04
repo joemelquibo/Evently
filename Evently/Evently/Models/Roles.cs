@@ -7,7 +7,7 @@ namespace Evently.Models
     {
         [Key]
         public int RoleId { get; set; }
-        public RoleName role { get; set; }
+        public RoleName Role { get; set; }
         public enum RoleName
         {
             Admin,

@@ -67,7 +67,7 @@ namespace Evently.Controllers
         [HttpPost]
         public IActionResult Register(string firstName, string lastName, string email, string password, /*string confpassword,*/ string phoneNum, Roles.RoleName role, Users.UserStatus status = Users.UserStatus.Active)
         {
-            var roleEntity = _context.Roles.FirstOrDefault(r => r.role == role);
+            var roleEntity = _context.Roles.FirstOrDefault(r => r.Role == role);
 
             var newUser = new Users 
             { 
