@@ -1,0 +1,114 @@
+﻿body, html {
+    height: 100%;
+    margin: 0;
+    background: radial-gradient( circle at 30% 50%, #8a2be2,#1a0033 45%, #0a0015 100%);
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: sans-serif;
+}
+
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 120px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 40px;
+}
+
+.brand-border-wrap {
+    width: 500px;
+    height: 500px;
+    padding: 4px;
+    border-radius: 50%;
+    background: linear-gradient(40deg, #fbca11, #ff007a, #7d2ae8, #00d4ff);
+    box-shadow: 0 0 30px rgba(125, 42, 232, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+    .brand-circle img {
+        width: 980px;
+        height: 610px;
+        padding: 31px;
+    }
+
+.login-card {
+    width: 550px;
+    max-width: 550px;
+    border-radius: 25px !important;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 60px 90px rgba(0,0,0,0.6);
+}
+
+.card-header-vibrant {
+    background: linear-gradient(90deg, #4b0082 0%, #8a2be2 100%);
+    padding: 40px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.form-content {
+    padding: 50px 60px !important;
+}
+
+.label-text {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #6c757d;
+    display: block;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.w3-input {
+    border: 1.5px solid #eee !important;
+    padding: 15px !important;
+    border-radius: 12px !important;
+    margin-bottom: 30px;
+    font-size: 1rem;
+    background-color: #fafafa !important;
+}
+
+
+.btn-signin {
+    background-color: #8a2be2 !important;
+    color: white !important;
+    border-radius: 12px !important;
+    font-weight: bold;
+    padding: 16px !important;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(125, 42, 232, 0.3);
+    transition: transform 0.2s, opacity 0.2s;
+    border: none;
+}
+
+    .btn-signin:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+.signup-link {
+    color: #8a2be2;
+    text-decoration: none;
+    font-weight: bold;
+}
