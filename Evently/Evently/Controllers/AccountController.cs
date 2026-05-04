@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Evently.DB;
 using Evently.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Evently.Controllers
 {
@@ -11,14 +13,19 @@ namespace Evently.Controllers
         {
             _context = context;
         }
-        
+
+        private static string HashPassword(string password)
+        {
+            return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        //Sign in Logic
+        // Sign in Logic
         [HttpPost]
         public IActionResult Index(string email, string password)
         {
@@ -44,47 +51,76 @@ namespace Evently.Controllers
 
             if (user.Status == Users.UserStatus.Suspended)
             {
-                ViewBag.Error = "Your account has been Suspended. Please contact support";
+                ViewBag.Error = "Your account has been Suspended. Please contact support.";
                 return View();
             }
 
-            if (user.Password != password)
+            if (user.Password != HashPassword(password))
             {
-                ViewBag.Error = "Invalid email or password";
+                ViewBag.Error = "Invalid email or password.";
                 return View();
             }
 
             HttpContext.Session.SetInt32("UserId", user.UserId);
             HttpContext.Session.SetString("UserName", user.FirstName);
-
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
-        //Register Logic
-        [HttpPost]
-        public IActionResult Register(string firstName, string lastName, string email, string password, /*string confpassword,*/ string phoneNum, Roles.RoleName role, Users.UserStatus status = Users.UserStatus.Active)
-        {
-            var roleEntity = _context.Roles.FirstOrDefault(r => r.Role == role);
 
-            var newUser = new Users 
-            { 
-                FirstName= firstName,
-                LastName= lastName,
-                Email= email,
-                Password= password,
-                //ConfirmPassword= confpassword,
-                PhoneNum= phoneNum,
+        // Register Logic
+        [HttpPost]
+        public IActionResult Register(string firstName, string lastName, string email, string password, string confpassword, string phoneNum, Roles.RoleName role, Users.UserStatus status = Users.UserStatus.Active)
+        {
+<<<<<<< HEAD
+            var roleEntity = _context.Roles.FirstOrDefault(r => r.Role == role);
+=======
+            if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) ||
+                string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                ViewBag.Error = "All fields are required.";
+                return View();
+            }
+
+            if (password != confpassword)
+            {
+                ViewBag.Error = "Passwords do not match.";
+                return View();
+            }
+
+            if (_context.Users.Any(u => u.Email == email))
+            {
+                ViewBag.Error = "An account with this email already exists.";
+                return View();
+            }
+
+            var roleEntity = _context.Roles.FirstOrDefault(r => r.role == role);
+>>>>>>> 99f0a4692729f3bad660fed658e332edc00107c1
+
+            if (roleEntity == null)
+            {
+                ViewBag.Error = "Selected role not found.";
+                return View();
+            }
+
+            var newUser = new Users
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Password = HashPassword(password),
+                PhoneNum = phoneNum,
                 Role = roleEntity,
                 Status = status
             };
 
             _context.Users.Add(newUser);
             _context.SaveChanges();
-            return View("Index");
+            return RedirectToAction("Index");
         }
-
     }
 }
