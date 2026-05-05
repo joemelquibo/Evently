@@ -1,20 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Evently.Models
 {
     public class Events
     {
         [Key]
         public int EventId { get; set; }
-        public required string EventName { get; set; }  
+
+        public required string EventName { get; set; }
         public required string Description { get; set; }
+
         public DateOnly EventDate { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
+
         public required string Venue { get; set; }
         public int Capacity { get; set; }
+
+       
+        public int UserId { get; set; }
+
         [ForeignKey("UserId")]
-        public required Users User { get; set; }
+        public Users? User { get; set; }
 
         public EventStatus Status { get; set; }
 
@@ -25,6 +33,5 @@ namespace Evently.Models
             Completed,
             Cancelled
         }
-
     }
 }

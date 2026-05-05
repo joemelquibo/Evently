@@ -1,0 +1,123 @@
+﻿@model Evently.Models.Events
+
+@{
+    ViewData["Title"] = "Create Event";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-controller="Events" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="User" />
+
+    <div class="form-grid">
+
+        <!-- LEFT SIDE -->
+        <div class="form-card">
+            <div class="card-title">💡 Basic Information</div>
+
+            <div class="field">
+                <label asp-for="EventName"></label>
+                <input asp-for="EventName" placeholder="Enter event title" />
+                <span asp-validation-for="EventName" class="text-danger"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" placeholder="Describe your event"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <div class="form-card">
+                <div class="card-title">📍 Location</div>
+
+                <div class="field">
+                    <label asp-for="Venue"></label>
+                    <input asp-for="Venue" placeholder="Enter venue" />
+                    <span asp-validation-for="Venue" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="card-title">👥 Capacity</div>
+
+                <div class="field">
+                    <label asp-for="Capacity"></label>
+                    <input asp-for="Capacity" type="number" min="1" />
+                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- DATE & TIME -->
+        <div class="form-card highlight">
+            <div class="card-title">📅 Date & Time</div>
+
+            <div class="date-row">
+
+                <div class="field">
+                    <label asp-for="EventDate"></label>
+                    <input asp-for="EventDate" type="date" />
+                </div>
+
+                <div class="field">
+                    <label asp-for="StartTime"></label>
+                    <input asp-for="StartTime" type="time" />
+                </div>
+
+                <div class="field">
+                    <label asp-for="EndTime"></label>
+                    <input asp-for="EndTime" type="time" />
+                </div>
+
+            </div>
+        </div>
+
+        <!-- STATUS -->
+        <div class="form-card">
+            <div class="card-title">⚙️ Status</div>
+
+            <div class="field">
+                <label asp-for="Status"></label>
+                <select asp-for="Status">
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="action-bar">
+
+        <a asp-controller="Events" asp-action="Index" class="btn-cancel">
+            Cancel
+        </a>
+
+        <div class="btn-group">
+            <button type="submit" class="btn-create">
+                Create Event
+            </button>
+        </div>
+
+    </div>
+
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/create-event.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
