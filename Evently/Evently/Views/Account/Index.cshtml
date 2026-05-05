@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evently | Sign In</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+
+    
+</head>
+<body>
+
+    <div class="auth-container">
+
+        <div class="brand-border-wrap">
+            <div class="brand-circle">
+                <img src="~/images/EventlyLOGO.jpg" alt="Evently Logo" />
+            </div>
+        </div>
+
+        <div class="login-card w3-card w3-white">
+            <div class="card-header-vibrant">
+                SIGN IN
+            </div>
+
+            <div class="form-content">
+                <form method="post">
+                    <label class="label-text">Email Address</label>
+                    <input type="email" name="email" class="w3-input" placeholder="name@email.com" required>
+
+                    <label class="label-text">Password</label>
+                    <input type="password" name="password" class="w3-input" placeholder="Enter password" required>
+
+                    <div style="margin-bottom: 25px;">
+                        <a href="#" style="color: #8a2be2; text-decoration: none; font-weight: bold; font-size: 0.9rem;">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="w3-button w3-block btn-signin">Sign In</button>
+
+                    <div class="w3-center w3-margin-top" style="font-size: 1rem; color: #888;">
+                        Don't have an account?
+                        <a asp-controller="Account" asp-action="Register" class="signup-link">Sign Up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

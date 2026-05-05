@@ -1,64 +1,10 @@
 ﻿@model IEnumerable<Evently.Models.Registrations>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "My Registrations";
+    ViewData["Title"] = "Dashboard";
 }
 
-<h2 class="w3-center">My Registrations</h2>
-
-@if (TempData["Success"] != null)
-{
-    <div class="w3-panel w3-pale-green w3-leftbar w3-border-green w3-round">
-        <p>@TempData["Success"]</p>
-    </div>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="w3-panel w3-pale-red w3-leftbar w3-border-red w3-round">
-        <p>@TempData["Error"]</p>
-    </div>
-}
-
-@if (!Model.Any())
-{
-    <p class="w3-center w3-text-grey">You have no registrations yet.</p>
-}
-else
-{
-    <table class="w3-table w3-striped w3-bordered w3-hoverable">
-        <thead class="w3-purple">
-            <tr>
-                <th>Event Name</th>
-                <th>Date Registered</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Event.EventName</td>
-                    <td>@item.registration_date.ToShortDateString()</td>
-                    <td>@item.Status</td>
-                    <td>
-                        @if (item.Status != Evently.Models.Registrations.RegistrationStatus.Cancelled)
-                        {
-                            <form asp-controller="Registrations" asp-action="Cancel" asp-route-id="@item.RegistrationId" method="post">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="w3-button w3-red w3-round w3-small">
-                                    Cancel
-                                </button>
-                            </form>
-                        }
-                        else
-                        {
-                            <span class="w3-text-grey">—</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>

@@ -5,46 +5,337 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Evently</title>
     <script type="importmap"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Evently.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #5b0ea6;
+            --bg-deep: #3d0072;
+            --sidebar-w: 160px;
+            --topbar-h: 68px;
+            --card-radius: 16px;
+            --accent: #a855f7;
+            --accent2: #7c3aed;
+            --text-light: #ffffff;
+            --text-muted: rgba(255,255,255,0.60);
+            --nav-active-bg: rgba(255,255,255,0.18);
+            --nav-hover-bg: rgba(255,255,255,0.10);
+            --content-bg: #f3e8ff;
+            --shadow-card: 0 2px 16px rgba(80,0,160,0.10);
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        /* ───────────── APP SHELL ───────────── */
+        .app-shell {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ───────────── SIDEBAR ───────────── */
+        .sidebar {
+            width: var(--sidebar-w);
+            min-height: 100vh;
+            background: linear-gradient(180deg, #4a0090 0%, #3a007a 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 28px 14px;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 4px;
+            margin-bottom: 36px;
+            text-decoration: none;
+        }
+
+        .sidebar-logo-emoji {
+            font-size: 1.4rem;
+        }
+
+        .sidebar-logo-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .sidebar-section-label {
+            font-size: 0.60rem;
+            font-weight: 700;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0 8px;
+            margin-bottom: 8px;
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            list-style: none;
+        }
+
+            .sidebar-nav a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 12px;
+                border-radius: 10px;
+                color: var(--text-muted);
+                font-size: 0.84rem;
+                font-weight: 600;
+                text-decoration: none;
+                transition: background 0.18s, color 0.18s;
+            }
+
+                .sidebar-nav a:hover {
+                    background: var(--nav-hover-bg);
+                    color: #fff;
+                }
+
+                .sidebar-nav a.active {
+                    background: var(--nav-active-bg);
+                    color: #fff;
+                }
+
+            .sidebar-nav .nav-icon {
+                font-size: 1rem;
+                width: 20px;
+                text-align: center;
+                flex-shrink: 0;
+            }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        /* ───────────── RIGHT PANEL ───────────── */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ───────────── TOPBAR ───────────── */
+        .topbar {
+            height: var(--topbar-h);
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 36px;
+            flex-shrink: 0;
+        }
+
+        .topbar-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.20);
+            border-radius: 50px;
+            padding: 8px 16px;
+            width: 210px;
+            transition: background 0.18s;
+        }
+
+            .topbar-search:focus-within {
+                background: rgba(255,255,255,0.22);
+            }
+
+            .topbar-search input {
+                border: none;
+                outline: none;
+                background: transparent;
+                font-family: inherit;
+                font-size: 0.85rem;
+                color: #fff;
+                width: 100%;
+            }
+
+                .topbar-search input::placeholder {
+                    color: rgba(255,255,255,0.55);
+                }
+
+        .topbar-search-icon {
+            color: rgba(255,255,255,0.70);
+            font-size: 0.95rem;
+        }
+
+        .topbar-icon-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.16s;
+        }
+
+            .topbar-icon-btn:hover {
+                background: rgba(255,255,255,0.26);
+            }
+
+        /* ───────────── CONTENT AREA ───────────── */
+        .content-area {
+            flex: 1;
+            background: var(--content-bg);
+            border-radius: 24px 24px 0 0;
+            overflow-y: auto;
+            padding: 32px 36px;
+        }
+
+        /* ───────────── FOOTER ───────────── */
+        .app-footer {
+            background: var(--content-bg);
+            border-top: 1px solid #e9d5ff;
+            padding: 10px 36px;
+            font-size: 0.76rem;
+            color: #7c3aed;
+            font-weight: 500;
+        }
+
+            .app-footer a {
+                color: #7c3aed;
+                text-decoration: none;
+            }
+
+                .app-footer a:hover {
+                    text-decoration: underline;
+                }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Evently</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Evently - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <div class="app-shell">
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="sidebar">
+            <a class="sidebar-logo" asp-controller="Home" asp-action="Index">
+                <span class="sidebar-logo-emoji">🎉</span>
+                <span class="sidebar-logo-text">Evently</span>
+            </a>
+
+            <div class="sidebar-section-label">Overview</div>
+            <ul class="sidebar-nav">
+                <li>
+                    <a asp-controller="Home" asp-action="Index"
+                       class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                        <span class="nav-icon">🏠</span> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Main" asp-action="Index"
+                       class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Main" ? "active" : "")">
+                        <span class="nav-icon">✅</span> Events
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Home" asp-action="Calendar"
+                       class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Calendar" ? "active" : "")">
+                        <span class="nav-icon">📅</span> Calendar
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-section-label">System</div>
+            <ul class="sidebar-nav">
+                <li>
+                    <a asp-controller="Account" asp-action="Index"
+                       class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" ? "active" : "")">
+                        <span class="nav-icon">👤</span> Accounts
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Home" asp-action="Privacy"
+                       class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Privacy" ? "active" : "")">
+                        <span class="nav-icon">⚙️</span> Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- ── RIGHT PANEL ── -->
+        <div class="right-panel">
+
+            <!-- Topbar -->
+            <header class="topbar">
+                <h1 class="topbar-title">@(ViewData["Title"]?.ToString()?.ToUpper() ?? "DASHBOARD")</h1>
+                <div class="topbar-right">
+                    <div class="topbar-search">
+                        <span class="topbar-search-icon">🔍</span>
+                        <input type="text" placeholder="Search…" />
+                    </div>
+                    <a class="topbar-icon-btn" title="Notifications">🔔</a>
+                    <a class="topbar-icon-btn" asp-controller="Account" asp-action="Index" title="Sign out">↪</a>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-area">
+                @RenderBody()
+            </div>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                &copy; 2026 Evently &nbsp;·&nbsp;
+                <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </footer>
+
+        </div><!-- /right-panel -->
+
+    </div><!-- /app-shell -->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

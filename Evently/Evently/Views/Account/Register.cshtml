@@ -1,0 +1,106 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evently | Create Account</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <partial name="_Background" />
+    <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="login-card w3-card w3-white">
+            <div class="card-header-vibrant">
+                Create Account
+            </div>
+
+            <div class="form-content">
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="error-box">
+                        ⚠️ @ViewBag.Error
+                    </div>
+                }
+
+                <form method="post">
+
+                    <div class="w3-row">
+                        <div class="w3-half" style="padding-right:10px">
+                            <label class="label-text">First Name</label>
+                            <input type="text" name="firstName" class="w3-input" placeholder="Dark" required>
+                        </div>
+                        <div class="w3-half" style="padding-left:10px">
+                            <label class="label-text">Last Name</label>
+                            <input type="text" name="lastName" class="w3-input" placeholder="System" required>
+                        </div>
+                    </div>
+
+                    <label class="label-text">Role</label>
+                    <select class="w3-select" name="role" required>
+                        <option value="" disabled selected>Choose role...</option>
+                        <option value="0">Admin</option>
+                        <option value="1">Organizer</option>
+                        <option value="2">Participant</option>
+                    </select>
+
+                    <label class="label-text">Email Address</label>
+                    <input type="email" name="email" class="w3-input" placeholder="you@example.com" required>
+
+                    <label class="label-text">Phone Number</label>
+                    <input type="text" name="phoneNum" class="w3-input" placeholder="+63 912 345 6789">
+
+                    <div class="w3-row">
+                        <div class="w3-half" style="padding-right:10px">
+                            <label class="label-text">Password</label>
+                            <input type="password" name="password" class="w3-input" placeholder="••••••••" required>
+                        </div>
+                        <div class="w3-half" style="padding-left:10px">
+                            <label class="label-text">Confirm Password</label>
+                            <input type="password" name="confpassword" class="w3-input" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <input type="checkbox" id="terms" name="terms" class="w3-check" required>
+                        <label for="terms" class="terms-text">
+                            I agree to the
+                            <a href="#" onclick="document.getElementById('termsModal').style.display='flex';return false;" class="signup-link">Terms of service</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w3-button w3-block btn-signup shadow">Create Account</button>
+
+                    <div class="w3-center w3-margin-top" style="font-size: 1rem; color: #888;">
+                        Already have an account?
+                        <a asp-controller="Account" asp-action="Index" class="signup-link">Sign In</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="termsModal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;">
+        <div style="background:white;border-radius:16px;padding:30px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;">
+            <h3 style="margin-top:0">Terms of Service</h3>
+            <p><strong>1. Acceptance</strong><br>By creating an account, you agree to these terms.</p>
+            <p><strong>2. Use of Service</strong><br>You agree to use Evently only for lawful purposes.</p>
+            <p><strong>3. Privacy</strong><br>We collect and process your data as described in our Privacy Policy.</p>
+            <p><strong>4. Termination</strong><br>We reserve the right to suspend accounts that violate these terms.</p>
+            <p><strong>5. Changes</strong><br>We may update these terms at any time. Continued use constitutes acceptance.</p>
+            <button onclick="document.getElementById('termsModal').style.display='none'"
+                    style="background:#8a2be2;color:white;border:none;border-radius:10px;padding:12px 24px;cursor:pointer;font-size:1rem;width:100%;margin-top:10px">
+                Close
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

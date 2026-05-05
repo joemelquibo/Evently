@@ -1,0 +1,133 @@
+﻿@{
+    ViewData["Title"] = "Calendar";
+
+    var today = DateTime.Today;
+    int currentMonth = (int?)ViewBag.Month ?? today.Month;
+    int currentYear = (int?)ViewBag.Year ?? today.Year;
+
+    var firstDay = new DateTime(currentYear, currentMonth, 1);
+    int daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+    int startDayOfWeek = (int)firstDay.DayOfWeek; // 0 = Sunday
+
+    string[] monthNames = { "January","February","March","April","May","June",
+                            "July","August","September","October","November","December" };
+    string[] dayNames = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+    /* Sample events — replace with ViewBag.Events / model binding */
+    var events = new[]
+    {
+        new { Day = 18, Title = "Design Systems Summit 2026",    Color = "#29B6F6" },
+        new { Day = 19, Title = "Design Systems Summit 2026",    Color = "#29B6F6" },
+        new { Day = 20, Title = "Design Systems Summit 2026",    Color = "#29B6F6" },
+        new { Day = 18, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
+        new { Day = 19, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
+        new { Day = 20, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
+        new { Day = 21, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
+    };
+
+    /* Distinct events for the sidebar panel */
+    var distinctEvents = events
+        .GroupBy(e => e.Title)
+        .Select(g => new
+        {
+            g.First().Title,
+            g.First().Color,
+            StartDay = g.Min(e => e.Day),
+            EndDay = g.Max(e => e.Day)
+        })
+        .ToList();
+}
+
+
+
+<div class="cal-page">
+
+    <!-- Events Panel -->
+    <div class="events-panel">
+        <div class="events-panel-title">📅 Events</div>
+
+        @foreach (var ev in distinctEvents)
+        {
+            string chipClass = ev.Color == "#29B6F6" ? "event-chip blue" : "event-chip pink";
+            <div class="@chipClass">
+                <div class="event-chip-date">
+                    @monthNames[currentMonth - 1] @ev.StartDay–@ev.EndDay, @currentYear
+                </div>
+                @ev.Title
+            </div>
+        }
+    </div>
+
+    <!-- Calendar -->
+    <div class="calendar-panel">
+
+        <!-- Month Tabs -->
+        <div class="month-tabs">
+            @for (int m = 1; m <= 12; m++)
+            {
+                string tabClass = (m == currentMonth) ? "month-tab active" : "month-tab";
+                <a href="@Url.Action("Calendar", "Home", new { month = m, year = currentYear })"
+                   class="@tabClass">@monthNames[m - 1]</a>
+            }
+        </div>
+
+        <!-- Day Headers -->
+        <div class="cal-header">
+            @foreach (var d in dayNames)
+            {
+                <div class="cal-header-cell">@d</div>
+            }
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="cal-grid">
+            @{
+                /* Previous month trailing days */
+                var prevMonth = firstDay.AddMonths(-1);
+                int prevDaysTotal = DateTime.DaysInMonth(prevMonth.Year, prevMonth.Month);
+
+                for (int i = 0; i < startDayOfWeek; i++)
+                {
+                    int prevDay = prevDaysTotal - startDayOfWeek + 1 + i;
+                    <div class="cal-cell other-month">
+                        <div class="cal-day-num">@prevDay</div>
+                    </div>
+                }
+
+                /* Current month */
+                for (int day = 1; day <= daysInMonth; day++)
+                {
+                    bool isToday = day == today.Day && currentMonth == today.Month && currentYear == today.Year;
+                    string cellCls = isToday ? "cal-cell today" : "cal-cell";
+
+                    <div class="@cellCls">
+                        <div class="cal-day-num">@day</div>
+                        @foreach (var ev in events.Where(e => e.Day == day))
+                        {
+                            <div class="cal-event">
+                                <div class="cal-event-dot" style="background:@ev.Color"></div>
+                                <div class="cal-event-text">@ev.Title</div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                /* Next month leading days */
+                int totalCells = startDayOfWeek + daysInMonth;
+                int remainingCells = totalCells % 7 == 0 ? 0 : 7 - (totalCells % 7);
+                for (int i = 1; i <= remainingCells; i++)
+                {
+                    <div class="cal-cell other-month">
+                        <div class="cal-day-num">@i</div>
+                    </div>
+                }
+            }
+        </div>
+
+    </div><!-- /calendar-panel -->
+</div><!-- /cal-page -->
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
+}
