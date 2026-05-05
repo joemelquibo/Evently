@@ -1,0 +1,175 @@
+﻿@model List<Evently.Models.Events>
+
+@{
+    ViewData["Title"] = "Events";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="content-card">
+
+    <!-- TOOLBAR -->
+    <div class="em-toolbar">
+
+        <div class="em-filters">
+            <button class="filter-pill active" onclick="filterByStatus('All')" id="btn-All">All</button>
+            <button class="filter-pill" onclick="filterByStatus('Ongoing')" id="btn-Ongoing">Live</button>
+            <button class="filter-pill" onclick="filterByStatus('Scheduled')" id="btn-Scheduled">Upcoming</button>
+            <button class="filter-pill" onclick="filterByStatus('Completed')" id="btn-Completed">Ended</button>
+        </div>
+
+        <div class="em-actions">
+
+            <input type="text" id="searchBox" placeholder="Search..."
+                   onkeyup="searchEvents()" class="search-box" />
+
+            <button onclick="toggleView('grid')" class="view-btn">⬛</button>
+            <button onclick="toggleView('list')" class="view-btn">☰</button>
+
+            <a asp-controller="Events" asp-action="Create" class="em-create-btn">
+                + Create Event
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- STATS -->
+    @{
+        var total = Model?.Count ?? 0;
+        var scheduled = Model?.Count(e => e.Status == Evently.Models.Events.EventStatus.Scheduled) ?? 0;
+        var ongoing = Model?.Count(e => e.Status == Evently.Models.Events.EventStatus.Ongoing) ?? 0;
+        var completed = Model?.Count(e => e.Status == Evently.Models.Events.EventStatus.Completed) ?? 0;
+    }
+
+    <div class="em-stats">
+        <div class="stat-pill"><div>Total</div><strong>@total</strong></div>
+        <div class="stat-pill"><div>Scheduled</div><strong>@scheduled</strong></div>
+        <div class="stat-pill"><div>Ongoing</div><strong>@ongoing</strong></div>
+        <div class="stat-pill"><div>Completed</div><strong>@completed</strong></div>
+    </div>
+
+    <!-- GRID -->
+    <div class="em-grid">
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var evt in Model)
+            {
+                var status = evt.Status.ToString();
+
+                var bandClass = status switch
+                {
+                    "Ongoing" => "band-ongoing",
+                    "Scheduled" => "band-upcoming",
+                    "Completed" => "band-ended",
+                    _ => "band-ended"
+                };
+
+                var registrations = ViewBag.Registrations as List<Evently.Models.Registrations>;
+                var registered = registrations?.Count(r => r.Event.EventId == evt.EventId) ?? 0;
+
+                <div class="event-card"
+                     data-status="@status"
+                     data-name="@evt.EventName.ToLower()">
+
+                    <!-- HEADER -->
+                    <div class="card-header-band @bandClass">
+                        <div class="status-badge">@status</div>
+                        <div class="event-icon">🎤</div>
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="card-body">
+
+                        <div class="card-title">@evt.EventName</div>
+
+                        <div class="meta-row">📅 @evt.EventDate.ToString("MMM dd, yyyy")</div>
+                        <div class="meta-row">📍 @evt.Venue</div>
+                        <div class="meta-row">📊 @registered / @evt.Capacity Registered</div>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="card-footer">
+                        <a asp-controller="Events" asp-action="Edit" asp-route-id="@evt.EventId"
+                           class="btn-edit-card">Edit</a>
+
+                        <a asp-controller="Events" asp-action="Delete" asp-route-id="@evt.EventId"
+                           onclick="return confirm('Delete this event?')"
+                           class="btn-delete-card">Delete</a>
+                    </div>
+
+                </div>
+            }
+        }
+        else
+        {
+            <div class="em-empty">
+                <h3>No events yet</h3>
+                <p>Create your first event.</p>
+
+                <a asp-controller="Events" asp-action="Create" class="em-create-btn">
+                    + Create Event
+                </a>
+            </div>
+        }
+
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/events.css" asp-append-version="true" />
+}
+
+@section Scripts {
+
+    <script>
+
+        function filterByStatus(status) {
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+
+            const map = {
+                'All': 'btn-All',
+                'Ongoing': 'btn-Ongoing',
+                'Scheduled': 'btn-Scheduled',
+                'Completed': 'btn-Completed'
+            };
+
+            document.getElementById(map[status])?.classList.add('active');
+
+            document.querySelectorAll('.event-card').forEach(card => {
+                card.style.display =
+                    (status === 'All' || card.dataset.status === status) ? '' : 'none';
+            });
+        }
+
+        function searchEvents() {
+            const value = document.getElementById("searchBox").value.toLowerCase();
+
+            document.querySelectorAll('.event-card').forEach(card => {
+                const name = card.dataset.name;
+                card.style.display = name.includes(value) ? "" : "none";
+            });
+        }
+
+        function toggleView(mode) {
+            const grid = document.querySelector(".em-grid");
+
+            if (mode === "list") {
+                grid.classList.add("list-view");
+            } else {
+                grid.classList.remove("list-view");
+            }
+        }
+
+    </script>
+
+}
