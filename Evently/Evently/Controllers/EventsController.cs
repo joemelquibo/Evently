@@ -39,21 +39,47 @@ namespace Evently.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            var role = HttpContext.Session.GetString("UserRole");
+
+            if(role != "Admin" && role != "Organizer")
+            {
+                return RedirectToAction("Index", "Events");
+            }
             return View("~/Views/Home/Events/CreateEvent.cshtml");
         }
 
-        
+
         // CREATE (POST)
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Events evt)
         {
-            // ❗ VALIDATE TIME
+            // Check Role Authorization
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if (userRole != "Admin" && userRole != "Organizer")
+            {
+                TempData["Error"] = "Access Denied: Only Admins and Organizers can create events.";
+                return RedirectToAction("Index");
+            }
+
+            // Assign the UserId BEFORE validation
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Account");
+            }
+            evt.UserId = userId.Value; //
+
+            // Logic Validation
             if (evt.EndTime <= evt.StartTime)
             {
                 ModelState.AddModelError("", "End time must be later than start time.");
             }
+
+            // Clean up Validation
+            // Remove the 'User' navigation object from validation to prevent null-object errors
+            ModelState.Remove("User");
 
             if (!ModelState.IsValid)
             {
@@ -62,16 +88,6 @@ namespace Evently.Controllers
 
             try
             {
-                // ✅ FIX: Assign logged-in user
-                var userId = HttpContext.Session.GetInt32("UserId");
-
-                if (userId == null)
-                {
-                    return RedirectToAction("Index", "Account");
-                }
-
-                evt.UserId = userId.Value;
-
                 _context.Events.Add(evt);
                 _context.SaveChanges();
 
@@ -85,9 +101,9 @@ namespace Evently.Controllers
             }
         }
 
-        
+
         // EDIT (GET)
-        
+
         [HttpGet]
         public IActionResult Edit(int id)
         {

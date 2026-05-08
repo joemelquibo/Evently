@@ -3,6 +3,7 @@ using Evently.DB;
 using Evently.Models;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evently.Controllers
 {
@@ -35,7 +36,7 @@ namespace Evently.Controllers
                 return View();
             }
 
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            var user = _context.Users.Include(u => u.Role).FirstOrDefault(u => u.Email == email);
 
             if (user == null)
             {
@@ -63,6 +64,7 @@ namespace Evently.Controllers
 
             HttpContext.Session.SetInt32("UserId", user.UserId);
             HttpContext.Session.SetString("UserName", user.FirstName);
+            HttpContext.Session.SetString("UserRole", user.Role.Role.ToString());
             return RedirectToAction("Index", "Home");
         }
 

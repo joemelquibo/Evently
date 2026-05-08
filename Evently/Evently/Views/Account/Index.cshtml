@@ -29,6 +29,14 @@
             </div>
 
             <div class="form-content">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="w3-panel w3-red w3-display-container w3-round" style="margin-top: 0; margin-bottom: 20px; padding: 12px;">
+                        <span onclick="this.parentElement.style.display='none'"
+                              class="w3-button w3-transparent w3-display-topright">&times;</span>
+                        <p style="margin: 0; font-size: 0.9rem;">@ViewBag.Error</p>
+                    </div>
+                }
                 <form method="post">
                     <label class="label-text">Email Address</label>
                     <input type="email" name="email" class="w3-input" placeholder="name@email.com" required>

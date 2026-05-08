@@ -11,6 +11,12 @@
         @TempData["Success"]
     </div>
 }
+@if (TempData["Error"] != null)
+{
+    <div class="alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #f5c6cb;">
+        @TempData["Error"]
+    </div>
+}
 
 <div class="content-card">
 
@@ -32,9 +38,17 @@
             <button onclick="toggleView('grid')" class="view-btn">⬛</button>
             <button onclick="toggleView('list')" class="view-btn">☰</button>
 
-            <a asp-controller="Events" asp-action="Create" class="em-create-btn">
-                + Create Event
-            </a>
+            <!-- Hiding the Create Button for non-admin and organizer accounts-->
+            @{
+                var role = Context.Session.GetString("UserRole");
+            }
+
+            @if (role == "Admin" || role == "Organizer")
+            {
+                <a asp-controller="Events" asp-action="Create" class="em-create-btn">
+                    + Create Event
+                </a>
+            }
 
         </div>
 
@@ -113,11 +127,21 @@
         {
             <div class="em-empty">
                 <h3>No events yet</h3>
-                <p>Create your first event.</p>
 
-                <a asp-controller="Events" asp-action="Create" class="em-create-btn">
-                    + Create Event
-                </a>
+                <!-- Hiding Create button for participants -->
+                @if (role == "Admin" || role == "Organizer")
+                {
+                    <p>Create your first event.</p>
+
+                    <a asp-controller="Events" asp-action="Create" class="em-create-btn">
+                        + Create Event
+                    </a>
+                }
+                else
+                {
+                    <p>Check back later for new events!</p>
+                }
+             
             </div>
         }
 
