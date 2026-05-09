@@ -1,0 +1,273 @@
+﻿
+/* ── Reset / base ── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+
+
+/* ── Main content card ── */
+.content-card {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    margin: 0;
+    overflow: hidden;
+    color: #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* ── Profile hero banner ── */
+.profile-banner {
+    background: linear-gradient(90deg, #5c0099 0%, #8b00cc 60%, #a020d0 100%);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    border-radius: 16px 16px 0 0;
+}
+
+.avatar-wrapper {
+    width: 72px;
+    height: 72px;
+    border-radius: 10px;
+    border: 3px solid #00d4ff;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 2.2rem;
+    color: rgba(255,255,255,0.8);
+}
+
+.profile-info {
+    flex: 1;
+}
+
+    .profile-info h2 {
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 2px;
+    }
+
+    .profile-info .email {
+        color: rgba(255,255,255,0.82);
+        font-size: 0.88rem;
+        margin-bottom: 2px;
+    }
+
+    .profile-info .phone {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.82rem;
+        margin-bottom: 8px;
+    }
+
+.badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    border-radius: 20px;
+    padding: 3px 13px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-role {
+    background: #29c76f;
+    color: #fff;
+}
+
+.badge-events {
+    background: rgba(255,255,255,0.18);
+    border: 1.5px solid rgba(255,255,255,0.45);
+    color: #fff;
+}
+
+    .badge-events::before {
+        content: "●";
+        font-size: 0.6rem;
+        color: #00d4ff;
+    }
+
+.edit-profile-btn {
+    background: rgba(255,255,255,0.18);
+    border: 1.5px solid rgba(255,255,255,0.45);
+    border-radius: 24px;
+    color: #fff;
+    padding: 9px 22px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+    .edit-profile-btn:hover {
+        background: rgba(255,255,255,0.30);
+        color: #fff;
+        text-decoration: none;
+    }
+
+/* ── Form section ── */
+.form-section {
+    padding: 28px 28px 20px;
+    border-bottom: 1.5px solid #e8e8e8;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 28px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+    .form-group label {
+        font-size: 0.8rem;
+        color: #888;
+        font-weight: 500;
+    }
+
+    .form-group input {
+        border: 1.5px solid #ddd;
+        border-radius: 8px;
+        padding: 9px 13px;
+        font-size: 0.92rem;
+        color: #333;
+        background: #fff;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+        .form-group input:focus {
+            border-color: #7b2ff7;
+        }
+
+/* ── Events history ── */
+.events-section {
+    padding: 24px 28px 28px;
+}
+
+    .events-section h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+.events-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .events-table th {
+        text-align: left;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #333;
+        padding-bottom: 10px;
+        border-bottom: 1.5px solid #eee;
+    }
+
+    .events-table td {
+        padding: 11px 0;
+        font-size: 0.88rem;
+        color: #444;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .events-table tr:last-child td {
+        border-bottom: none;
+    }
+
+/* Status pills */
+.pill {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 3px 14px;
+    font-size: 0.76rem;
+    font-weight: 600;
+}
+
+.pill-upcoming {
+    background: #d4f8e8;
+    color: #1a7a4a;
+}
+
+.pill-ended {
+    background: #e0d4f8;
+    color: #5c3d99;
+}
+
+/* Attendance pills */
+.pill-undetermined {
+    background: #e8e8e8;
+    color: #666;
+}
+
+.pill-yes {
+    background: #d4f8e8;
+    color: #1a7a4a;
+}
+
+.pill-no {
+    background: #fde8e8;
+    color: #c0392b;
+}
+
+/* ── Success alert ── */
+.alert-success {
+    margin: 12px 28px 0;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.88rem;
+}
+
+/* ── Responsive ── */
+@@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .top-bar h1 {
+        font-size: 1.4rem;
+    }
+
+    .profile-banner {
+        flex-wrap: wrap;
+    }
+
+    .edit-profile-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
