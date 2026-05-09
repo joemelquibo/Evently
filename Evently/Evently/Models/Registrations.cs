@@ -10,7 +10,7 @@ namespace Evently.Models
         public required Events Event { get; set; }
         [ForeignKey("UserId")]
         public required Users User{ get; set; }
-        public DateTime registration_date { get; set; }
+        public DateTime RegistrationDate { get; set; }
 
         public RegistrationStatus Status { get; set; }
         public enum RegistrationStatus
