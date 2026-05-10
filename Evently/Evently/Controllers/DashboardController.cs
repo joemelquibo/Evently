@@ -16,8 +16,16 @@ namespace Evently.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetInt32("UserId") == null)
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
                 return RedirectToAction("Index", "Account");
+
+            var role = HttpContext.Session.GetString("UserRole");
+            if (role != "Admin" && role != "Organizer")
+            {
+                // Redirect non-staff users to the events page
+                return RedirectToAction("Index", "Events");
+            }
 
             // Stats using ViewBag — from notes pattern
             ViewBag.TotalEvents = _context.Events.Count();
@@ -56,7 +64,7 @@ namespace Evently.Controllers
             ViewBag.AbsentCount = _context.Attendances
                 .Count(a => a.Status == Attendances.AttendanceStatus.Absent);
 
-            return View("~/Views/Dashboard/Index.cshtml");
+            return View("~/Views/Home/Index.cshtml");
         }
     }
 }

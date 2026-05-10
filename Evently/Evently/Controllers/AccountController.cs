@@ -65,7 +65,16 @@ namespace Evently.Controllers
             HttpContext.Session.SetInt32("UserId", user.UserId);
             HttpContext.Session.SetString("UserName", user.FirstName);
             HttpContext.Session.SetString("UserRole", user.Role.Role.ToString());
-            return RedirectToAction("Index", "Home");
+
+            if (user.Role.Role.ToString() == "Admin" || user.Role.Role.ToString() == "Organizer")
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+            else
+            {
+                // Participants funnel into Events view
+                return RedirectToAction("Index", "Events");
+            }
         }
 
         [HttpGet]

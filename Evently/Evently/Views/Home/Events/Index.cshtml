@@ -111,14 +111,18 @@
                     </div>
 
                     <!-- FOOTER -->
-                    <div class="card-footer">
-                        <a asp-controller="Events" asp-action="Edit" asp-route-id="@evt.EventId"
-                           class="btn-edit-card">Edit</a>
+                    @if (role == "Admin" || role == "Organizer")
+                    {
+                        <div class="card-footer">
+                            <a asp-controller="Events" asp-action="Edit" asp-route-id="@evt.EventId"
+                               class="btn-edit-card">Edit</a>
 
-                        <a asp-controller="Events" asp-action="Delete" asp-route-id="@evt.EventId"
-                           onclick="return confirm('Delete this event?')"
-                           class="btn-delete-card">Delete</a>
-                    </div>
+                            <a asp-controller="Events" asp-action="Delete" asp-route-id="@evt.EventId"
+                               onclick="return confirm('Delete this event?')"
+                               class="btn-delete-card">Delete</a>
+                        </div>
+                    }
+                    
 
                 </div>
             }
