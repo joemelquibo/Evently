@@ -50,7 +50,25 @@
         padding: 10px 25px;
     }
 </style>
+<script>
+    function togglePaymentFields() {
+        const method = document.getElementById("payMethodSelect").value;
 
+        // Hide everything first
+        document.getElementById("field-mobile").style.display = "none";
+        document.getElementById("field-bank").style.display = "none";
+        document.getElementById("field-cash").style.display = "none";
+
+        // Show specific field based on selection
+        if (method === "GCash" || method === "Maya") {
+            document.getElementById("field-mobile").style.display = "block";
+        } else if (method === "Bank Transfer") {
+            document.getElementById("field-bank").style.display = "block";
+        } else if (method === "Cash") {
+            document.getElementById("field-cash").style.display = "block";
+        }
+    }
+</script>
 <div class="container-fluid py-4">
     <form asp-controller="Events" asp-action="Create" method="post">
         @Html.AntiForgeryToken()
@@ -119,22 +137,13 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="event-card shadow-sm">
                             <div class="section-title">
                                 <span class="fs-4">👥</span> Capacity
                             </div>
                             <label asp-for="Capacity" class="form-label">Max Participants</label>
                             <input asp-for="Capacity" class="form-control" type="number" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="event-card shadow-sm">
-                            <div class="section-title">
-                                <span class="fs-4">➕</span> Registration
-                            </div>
-                            <label class="form-label">Price / Fee (Optional)</label>
-                            <input type="text" class="form-control" placeholder="₱" />
                         </div>
                     </div>
                 </div>
@@ -160,7 +169,44 @@
                 </div>
             </div>
         </div>
+        <div class="card shadow-sm mb-4" style="background-color: #ede2ff; border-radius: 12px; border: none;">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-credit-card fs-4" style="color: #7c3aed;"></i>
+                <h5 class="card-title mb-0 fw-bold">Payment Details</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted small">Amount to Pay</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">₱</span>
+                            <input type="text" name="PayAmt" class="form-control border-start-0 bg-light" value="200.00" readonly />
+                        </div>
+                    </div>
 
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted small">Payment Method</label>
+                        <select id="payMethodSelect" name="PayMethod" class="form-select" onchange="togglePaymentFields()">
+                            <option value="">-- Select Method --</option>
+                            <option value="GCash">GCash</option>
+                            <option value="Maya">Maya</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div id="field-mobile" style="display:none;">
+                            <label class="form-label text-muted small">Mobile Number</label>
+                            <input type="text" name="PaymentRef" class="form-control" placeholder="09** *** ****" />
+                        </div>
+                        <div id="field-bank" style="display:none;">
+                            <label class="form-label text-muted small">Account Number</label>
+                            <input type="text" name="PaymentRef" class="form-control" placeholder="****-****-****" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="d-flex justify-content-between mt-4 pb-5">
             <a asp-controller="Events" asp-action="Index" class="btn btn-light rounded-pill px-4">❌ Cancel</a>
             <div class="d-flex gap-2">
