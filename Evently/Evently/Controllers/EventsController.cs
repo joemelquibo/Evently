@@ -70,7 +70,7 @@ namespace Evently.Controllers
                 return RedirectToAction("Index", "Account");
             }
             evt.UserId = userId.Value; //
-
+            evt.EventDate = DateTime.SpecifyKind(evt.EventDate, DateTimeKind.Utc);
             // Logic Validation
             if (evt.EndTime <= evt.StartTime)
             {
@@ -94,9 +94,12 @@ namespace Evently.Controllers
                 TempData["Success"] = "Event created successfully!";
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex) // <--- You need the 'ex' here!
             {
-                ModelState.AddModelError("", "Something went wrong while saving.");
+                // This extracts the real database error so we can see it on the screen
+                var innerError = ex.InnerException?.Message ?? ex.Message;
+                ModelState.AddModelError("", "Database Error: " + innerError);
+
                 return View("~/Views/Home/Events/CreateEvent.cshtml", evt);
             }
         }
