@@ -174,5 +174,80 @@ namespace Evently.Controllers
 
             return RedirectToAction("Index");
         }
+        public IActionResult Details(int id)
+        {
+            // Find the event by ID
+            var evt = _context.Events.FirstOrDefault(e => e.EventId == id);
+
+            if (evt == null)
+            {
+                return NotFound(); // This handles cases where the ID doesn't exist
+            }
+
+            return View("~/Views/Home/Events/Details.cshtml", evt);
+        }
+        [HttpPost]
+        public IActionResult Join(int id)
+        {
+            // 1. Get the current User's ID from the session (saved as Int32 in AccountController)
+            int? currentUserId = HttpContext.Session.GetInt32("UserId");
+
+            if (currentUserId == null)
+            {
+                return RedirectToAction("Index", "Account");
+            }
+
+            // 2. Fetch all necessary data from the Database
+            var currentUser = _context.Users.Find(currentUserId.Value);
+            var eventObj = _context.Events.Find(id);
+
+            // Fetch a default Admin to satisfy the 'VerifiedBy' required member in your model
+            var adminUser = _context.Users.FirstOrDefault(u => u.Role.Role == Evently.Models.Roles.RoleName.Admin);
+
+            // 3. Safety checks
+            if (eventObj == null) return NotFound();
+            if (currentUser == null || adminUser == null)
+            {
+                TempData["Error"] = "Account verification failed. Please try logging in again.";
+                return RedirectToAction("Index", "Account");
+            }
+
+            // 4. Registration Capacity Logic (The "1/5" Check)
+            // Count current attendees to compare against the static Capacity limit
+            var currentRegistrations = _context.Attendances.Count(a => a.EventId == id);
+
+            if (currentRegistrations >= eventObj.Capacity)
+            {
+                TempData["Error"] = $"Sorry, {eventObj.EventName} is already fully booked!";
+                return RedirectToAction("Index");
+            }
+
+            // 5. Initialize the Attendance record based on your Attendances.cs model
+            var attendance = new Attendances
+            {
+                EventId = id,           // Uses the 'id' passed from the button
+                User = currentUser,     // Satisfies 'required Users User'
+                VerifiedBy = adminUser, // Satisfies 'required Users VerifiedBy'
+                checkInTime = DateTime.UtcNow,
+                Status = Attendances.AttendanceStatus.Present // Sets initial status
+            };
+
+            try
+            {
+                // 6. Save to Database
+                _context.Attendances.Add(attendance);
+                _context.SaveChanges();
+
+                // 7. Set success message and Redirect to the main Events page
+                TempData["Success"] = $"You've successfully joined {eventObj.EventName}! See you there.";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Log the inner exception if the database rejects the save
+                TempData["Error"] = "Database Error: " + (ex.InnerException?.Message ?? ex.Message);
+                return RedirectToAction("Details", new { id = id });
+            }
+        }
     }
 }

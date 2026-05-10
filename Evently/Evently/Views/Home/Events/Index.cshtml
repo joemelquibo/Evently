@@ -111,17 +111,27 @@
                     </div>
 
                     <!-- FOOTER -->
-                    @if (role == "Admin" || role == "Organizer")
-                    {
-                        <div class="card-footer">
+                    <div class="card-footer d-flex gap-2">
+                        <a asp-controller="Events" asp-action="Details" asp-route-id="@evt.EventId" 
+                           class="btn-view-card flex-grow-1 text-center" 
+                           style="background: #7c3aed; color: white; padding: 5px 10px; border-radius: 8px; text-decoration: none; font-size: 0.85rem;">
+                           View Details
+                        </a>
+
+                        @if (role == "Admin" || role == "Organizer")
+                        {
                             <a asp-controller="Events" asp-action="Edit" asp-route-id="@evt.EventId"
-                               class="btn-edit-card">Edit</a>
+                               class="btn-edit-card" style="padding: 5px 10px; border: 1px solid #7c3aed; color: #7c3aed; border-radius: 8px; text-decoration: none; font-size: 0.85rem;">
+                               Edit
+                            </a>
 
                             <a asp-controller="Events" asp-action="Delete" asp-route-id="@evt.EventId"
                                onclick="return confirm('Delete this event?')"
-                               class="btn-delete-card">Delete</a>
-                        </div>
-                    }
+                               class="btn-delete-card" style="padding: 5px 10px; color: #dc3545; text-decoration: none; font-size: 0.85rem;">
+                               🗑️
+                            </a>
+                        }
+                    </div>
                     
 
                 </div>
