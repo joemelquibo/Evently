@@ -115,44 +115,52 @@ namespace Evently.Controllers
             if (evt == null)
                 return NotFound();
 
-            return View("~/Views/Home/Events/EditEvent.cshtml", evt);
+            return View("~/Views/Home/Events/Edit.cshtml", evt);
         }
 
-        
+
         // EDIT (POST)
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Events evt)
         {
+            // 1. MUST ADD THIS: The Postgres UTC Passport
+            evt.EventDate = DateTime.SpecifyKind(evt.EventDate, DateTimeKind.Utc);
+
             if (evt.EndTime <= evt.StartTime)
             {
                 ModelState.AddModelError("", "End time must be later than start time.");
             }
 
+            // 2. Clean up validation for navigation properties
+            ModelState.Remove("User");
+
             if (!ModelState.IsValid)
             {
-                return View("~/Views/Home/Events/EditEvent.cshtml", evt);
+                return View("~/Views/Home/Events/Edit.cshtml", evt);
             }
 
             try
             {
+                // 3. Ensure the record is being tracked for update
                 _context.Events.Update(evt);
                 _context.SaveChanges();
 
                 TempData["Success"] = "Event updated successfully!";
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Update failed.");
-                return View("~/Views/Home/Events/EditEvent.cshtml", evt);
+                var innerError = ex.InnerException?.Message ?? ex.Message;
+                ModelState.AddModelError("", "Update failed: " + innerError);
+                return View("~/Views/Home/Events/Edit.cshtml", evt);
             }
         }
 
-        
+
         // DELETE
-       
+
         public IActionResult Delete(int id)
         {
             var evt = _context.Events.FirstOrDefault(e => e.EventId == id);
