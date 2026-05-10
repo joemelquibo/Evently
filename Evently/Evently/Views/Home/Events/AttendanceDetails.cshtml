@@ -1,0 +1,168 @@
+﻿@using Evently.Models.ViewModels
+@model EventAttendanceViewModel
+
+@{
+    ViewData["Title"] = "Attendance Details";
+}
+
+<link rel="stylesheet"
+      href="~/css/attendance.css"
+      asp-append-version="true" />
+
+<div class="attendance-container">
+
+    <!-- HEADER -->
+    <div class="attendance-header">
+
+        <h1>
+            @Model.Event.EventName
+        </h1>
+
+        <p>
+            Attendance Details
+        </p>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="attendance-stats">
+
+        <!-- PARTICIPANTS -->
+        <div class="attendance-card">
+
+            <div class="attendance-number">
+                @Model.TotalParticipants
+            </div>
+
+            <div class="attendance-label">
+                Participants
+            </div>
+
+        </div>
+
+        <!-- PRESENT -->
+        <div class="attendance-card">
+
+            <div class="attendance-number">
+                @Model.PresentCount
+            </div>
+
+            <div class="attendance-label">
+                Present
+            </div>
+
+        </div>
+
+        <!-- ABSENT -->
+        <div class="attendance-card">
+
+            <div class="attendance-number">
+                @Model.AbsentCount
+            </div>
+
+            <div class="attendance-label">
+                Absent
+            </div>
+
+        </div>
+
+        <!-- RATE -->
+        <div class="attendance-card">
+
+            <div class="attendance-number">
+                @Math.Round(Model.AttendanceRate)%
+            </div>
+
+            <div class="attendance-label">
+                Attendance Rate
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="attendance-table-wrap">
+
+        <table class="attendance-table">
+
+            <thead>
+
+                <tr>
+                    <th>Participant</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Check In</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model.Attendances != null
+                && Model.Attendances.Any())
+                {
+                    @foreach (var p in Model.Attendances)
+                    {
+                        <tr>
+
+                            <!-- NAME -->
+                            <td>
+                                @p.User.FirstName
+                                @p.User.LastName
+                            </td>
+
+                            <!-- EMAIL -->
+                            <td>
+                                @p.User.Email
+                            </td>
+
+                            <!-- STATUS -->
+                            <td>
+
+                                @if (p.Status ==
+                               Evently.Models.Attendances
+                               .AttendanceStatus.Present)
+                                {
+                                    <span class="present-badge">
+                                        Present
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="absent-badge">
+                                        Absent
+                                    </span>
+                                }
+
+                            </td>
+
+                            <!-- CHECK IN -->
+                            <td>
+                                @p.checkInTime.ToString("MMM dd, yyyy hh:mm tt")
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="4"
+                            style="text-align:center;">
+
+                            No participants found
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

@@ -1,88 +1,258 @@
 ﻿@model Evently.Models.Events
+
 @{
     ViewData["Title"] = "Edit Event";
 }
 
-<div style="flex:1; overflow-y:auto;">
-    <div class="evently-card" style="max-width:700px; margin:0 auto;">
+<link rel="stylesheet"
+      href="~/css/edit-event.css"
+      asp-append-version="true" />
 
+<div class="edit-event-wrap">
+
+    <div class="evently-card">
+
+        <!-- TITLE -->
         <div class="evently-card-title">
-            <i class="bi bi-pencil-square"></i> Edit Event
+
+            <i class="bi bi-pencil-square"></i>
+
+            Edit Event
+
         </div>
 
-        <form asp-action="Edit" asp-controller="Events" method="post">
+        <!-- FORM -->
+        <form asp-action="Edit"
+              asp-controller="Events"
+              method="post">
+
             @Html.AntiForgeryToken()
 
-            <!-- Hidden field to preserve EventId -->
-            <input type="hidden" asp-for="EventId" />
-            <input type="hidden" asp-for="UserId" />
+            <!-- HIDDEN -->
+            <input type="hidden"
+                   asp-for="EventId" />
 
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <input type="hidden"
+                   asp-for="UserId" />
 
-            <div class="mb-3">
-                <label asp-for="EventName" class="form-label">Event Name</label>
-                <input asp-for="EventName" class="form-control" />
-                <span asp-validation-for="EventName" class="text-danger"></span>
+            <!-- VALIDATION -->
+            <div asp-validation-summary="All"
+                 class="text-danger mb-3">
             </div>
 
+            <!-- EVENT NAME -->
             <div class="mb-3">
-                <label asp-for="Description" class="form-label">Description</label>
-                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
+
+                <label asp-for="EventName"
+                       class="form-label">
+
+                    Event Name
+
+                </label>
+
+                <input asp-for="EventName"
+                       class="form-control" />
+
+                <span asp-validation-for="EventName"
+                      class="text-danger">
+                </span>
+
             </div>
 
+            <!-- DESCRIPTION -->
+            <div class="mb-3">
+
+                <label asp-for="Description"
+                       class="form-label">
+
+                    Description
+
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="4">
+                </textarea>
+
+                <span asp-validation-for="Description"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- DATE + VENUE -->
             <div class="row">
+
+                <!-- DATE -->
                 <div class="col-md-6 mb-3">
-                    <label asp-for="EventDate" class="form-label">Event Date</label>
-                    <input asp-for="EventDate" type="date" class="form-control" />
-                    <span asp-validation-for="EventDate" class="text-danger"></span>
+
+                    <label asp-for="EventDate"
+                           class="form-label">
+
+                        Event Date
+
+                    </label>
+
+                    <input asp-for="EventDate"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="EventDate"
+                          class="text-danger">
+                    </span>
+
                 </div>
+
+                <!-- VENUE -->
                 <div class="col-md-6 mb-3">
-                    <label asp-for="Venue" class="form-label">Venue</label>
-                    <input asp-for="Venue" class="form-control" />
-                    <span asp-validation-for="Venue" class="text-danger"></span>
+
+                    <label asp-for="Venue"
+                           class="form-label">
+
+                        Venue
+
+                    </label>
+
+                    <input asp-for="Venue"
+                           class="form-control" />
+
+                    <span asp-validation-for="Venue"
+                          class="text-danger">
+                    </span>
+
                 </div>
+
             </div>
 
+            <!-- TIME + CAPACITY -->
             <div class="row">
+
+                <!-- START -->
                 <div class="col-md-4 mb-3">
-                    <label asp-for="StartTime" class="form-label">Start Time</label>
-                    <input asp-for="StartTime" type="time" class="form-control" />
-                    <span asp-validation-for="StartTime" class="text-danger"></span>
+
+                    <label asp-for="StartTime"
+                           class="form-label">
+
+                        Start Time
+
+                    </label>
+
+                    <input asp-for="StartTime"
+                           type="time"
+                           class="form-control" />
+
+                    <span asp-validation-for="StartTime"
+                          class="text-danger">
+                    </span>
+
                 </div>
+
+                <!-- END -->
                 <div class="col-md-4 mb-3">
-                    <label asp-for="EndTime" class="form-label">End Time</label>
-                    <input asp-for="EndTime" type="time" class="form-control" />
-                    <span asp-validation-for="EndTime" class="text-danger"></span>
+
+                    <label asp-for="EndTime"
+                           class="form-label">
+
+                        End Time
+
+                    </label>
+
+                    <input asp-for="EndTime"
+                           type="time"
+                           class="form-control" />
+
+                    <span asp-validation-for="EndTime"
+                          class="text-danger">
+                    </span>
+
                 </div>
+
+                <!-- CAPACITY -->
                 <div class="col-md-4 mb-3">
-                    <label asp-for="Capacity" class="form-label">Capacity</label>
-                    <input asp-for="Capacity" type="number" class="form-control" />
-                    <span asp-validation-for="Capacity" class="text-danger"></span>
+
+                    <label asp-for="Capacity"
+                           class="form-label">
+
+                        Capacity
+
+                    </label>
+
+                    <input asp-for="Capacity"
+                           type="number"
+                           class="form-control" />
+
+                    <span asp-validation-for="Capacity"
+                          class="text-danger">
+                    </span>
+
                 </div>
+
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Status" class="form-label">Status</label>
-                <select asp-for="Status" class="form-select">
-                    <option value="0">Scheduled</option>
-                    <option value="1">Ongoing</option>
-                    <option value="2">Completed</option>
-                    <option value="3">Cancelled</option>
+            <!-- STATUS -->
+            <div class="mb-4">
+
+                <label asp-for="Status"
+                       class="form-label">
+
+                    Status
+
+                </label>
+
+                <select asp-for="Status"
+                        class="form-select">
+
+                    <option value="0">
+                        Scheduled
+                    </option>
+
+                    <option value="1">
+                        Ongoing
+                    </option>
+
+                    <option value="2">
+                        Completed
+                    </option>
+
+                    <option value="3">
+                        Cancelled
+                    </option>
+
                 </select>
+
             </div>
 
+            <!-- BUTTONS -->
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Update Event</button>
-                <a href="@Url.Action("Index", "Events")" class="btn btn-secondary">Cancel</a>
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    Update Event
+
+                </button>
+
+                <a href="@Url.Action("Index", "Events")"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
             </div>
 
         </form>
+
     </div>
+
 </div>
 
 @section Scripts {
+
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial"
+        );
     }
+
 }

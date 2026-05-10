@@ -20,7 +20,7 @@ namespace Evently.Controllers
         public IActionResult Index()
         {
             var events = _context.Events
-                .Include(e => e.User) // useful later (creator name)
+                .Include(e => e.User) 
                 .ToList();
 
             var registrations = _context.Registrations
@@ -60,7 +60,7 @@ namespace Evently.Controllers
             if (userRole != "Admin" && userRole != "Organizer")
             {
                 TempData["Error"] = "Access Denied: Only Admins and Organizers can create events.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             // Assign the UserId BEFORE validation
@@ -103,7 +103,78 @@ namespace Evently.Controllers
                 return View("~/Views/Home/Events/CreateEvent.cshtml", evt);
             }
         }
+        
+       // ATTENDANCE DETAILS
+public IActionResult AttendanceDetails(int id)
+{
+    // GET EVENT
+    var evt = _context.Events
+        .FirstOrDefault(e => e.EventId == id);
 
+    if (evt == null)
+    {
+        return NotFound();
+    }
+
+    // GET ATTENDANCES
+    var attendances = _context.Attendances
+        .Include(a => a.User)
+        .Where(a => a.EventId == id)
+        .ToList();
+
+    // TOTAL PARTICIPANTS
+    var totalParticipants =
+        attendances.Count;
+
+    // PRESENT COUNT
+    var presentCount =
+        attendances.Count(a =>
+            a.Status ==
+            Attendances.AttendanceStatus.Present);
+
+    // ABSENT COUNT
+    var absentCount =
+        attendances.Count(a =>
+            a.Status ==
+            Attendances.AttendanceStatus.Absent);
+
+    // ATTENDANCE RATE
+    double attendanceRate = 0;
+
+    if (totalParticipants > 0)
+    {
+        attendanceRate =
+            ((double)presentCount
+            / totalParticipants) * 100;
+    }
+
+            // VIEW MODEL
+            var vm =
+                new Evently.Models.ViewModels
+                .EventAttendanceViewModel
+                {
+                    Event = evt,
+
+                    Attendances = attendances,
+
+                    TotalParticipants =
+                        totalParticipants,
+
+                    PresentCount =
+                        presentCount,
+
+                    AbsentCount =
+                        absentCount,
+
+                    AttendanceRate =
+                        attendanceRate
+                };
+
+            return View(
+                "~/Views/Home/Events/AttendanceDetails.cshtml",
+                vm
+            );
+        }
 
         // EDIT (GET)
 
@@ -172,7 +243,7 @@ namespace Evently.Controllers
                 TempData["Success"] = "Event deleted.";
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Dashboard");
         }
         public IActionResult Details(int id)
         {

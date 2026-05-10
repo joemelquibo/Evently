@@ -120,15 +120,25 @@
 
                         @if (role == "Admin" || role == "Organizer")
                         {
-                            <a asp-controller="Events" asp-action="Edit" asp-route-id="@evt.EventId"
-                               class="btn-edit-card" style="padding: 5px 10px; border: 1px solid #7c3aed; color: #7c3aed; border-radius: 8px; text-decoration: none; font-size: 0.85rem;">
+                            <a asp-controller="Events" 
+                                    asp-action="Edit" 
+                                    asp-route-id="@evt.EventId"
+                               class="btn-edit-card" 
+                               style="padding: 5px 10px; border: 1px solid #7c3aed; 
+                                      color: #7c3aed; border-radius: 8px; 
+                                      text-decoration: none; 
+                                      font-size: 0.85rem;">
                                Edit
                             </a>
 
-                            <a asp-controller="Events" asp-action="Delete" asp-route-id="@evt.EventId"
-                               onclick="return confirm('Delete this event?')"
-                               class="btn-delete-card" style="padding: 5px 10px; color: #dc3545; text-decoration: none; font-size: 0.85rem;">
-                               🗑️
+                            <a asp-controller="Events"
+                                   asp-action="Delete"
+                                   asp-route-id="@evt.EventId"
+                                   onclick="return confirm('Delete this event?')"
+                                   class="btn-delete-card">
+
+                                ✖
+
                             </a>
                         }
                     </div>
