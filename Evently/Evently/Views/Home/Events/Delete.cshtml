@@ -1,0 +1,43 @@
+﻿@model Evently.Models.Events
+@{
+    ViewData["Title"] = "Delete Event";
+}
+
+@section PageTitle {
+    DELETE EVENT
+}
+
+<div style="flex:1; display:flex; align-items:center; justify-content:center;">
+    <div class="evently-card" style="max-width:500px; width:100%; text-align:center;">
+
+        <div class="evently-card-title" style="justify-content:center; color:#EF4444;">
+            <i class="bi bi-trash3-fill"></i> Delete Event
+        </div>
+
+        <p style="color:#555; margin-bottom:8px;">
+            Are you sure you want to delete this event?
+        </p>
+        <p style="font-weight:800; font-size:1.1rem; color:#222; margin-bottom:20px;">
+            "@Model.EventName"
+        </p>
+
+        <div style="background:#FEF2F2; border-radius:10px; padding:12px; margin-bottom:20px;">
+            <p style="margin:0; font-size:0.85rem; color:#B91C1C;">
+                📅 @Model.EventDate.ToString("MMM dd, yyyy") &nbsp;|&nbsp;
+                📍 @Model.Venue &nbsp;|&nbsp;
+                👥 @Model.Capacity capacity
+            </p>
+        </div>
+
+        <!-- Notes pattern: two forms, one GET cancel, one POST confirm -->
+        <div class="d-flex gap-2 justify-content-center">
+            <form asp-action="DeleteConfirmed" asp-controller="Events" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.EventId" />
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            </form>
+            <a href="@Url.Action("Index", "Events")" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </div>
+</div>
