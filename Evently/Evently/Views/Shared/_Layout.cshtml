@@ -49,21 +49,12 @@
                     </a>
                 </li>
             </ul>
-
-            <div class="sidebar-spacer"></div>
-
             <div class="sidebar-section-label">System</div>
             <ul class="sidebar-nav">
                 <li>
                     <a asp-controller="Profile" asp-action="Index"
                        class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" ? "active" : "")">
                         <span class="nav-icon"><i class="bi bi-person-fill"></i></span> Profile
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Home" asp-action="Privacy"
-                       class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Privacy" ? "active" : "")">
-                        <span class="nav-icon"><i class="bi bi-gear-fill"></i></span> Settings
                     </a>
                 </li>
             </ul>
