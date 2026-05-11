@@ -2,12 +2,11 @@
 
 @{
     ViewData["Title"] = "Create Event";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
     .event-card {
-        background-color: #E7DBFF; /* Light purple background */
+        background-color: #E7DBFF;
         border-radius: 20px;
         border: none;
         margin-bottom: 20px;
@@ -50,16 +49,15 @@
         padding: 10px 25px;
     }
 </style>
+
 <script>
     function togglePaymentFields() {
         const method = document.getElementById("payMethodSelect").value;
 
-        // Hide everything first
         document.getElementById("field-mobile").style.display = "none";
         document.getElementById("field-bank").style.display = "none";
         document.getElementById("field-cash").style.display = "none";
 
-        // Show specific field based on selection
         if (method === "GCash" || method === "Maya") {
             document.getElementById("field-mobile").style.display = "block";
         } else if (method === "Bank Transfer") {
@@ -69,6 +67,7 @@
         }
     }
 </script>
+
 <div class="container-fluid py-4">
     <form asp-controller="Events" asp-action="Create" method="post">
         @Html.AntiForgeryToken()
@@ -78,7 +77,7 @@
             <div class="col-lg-7">
                 <div class="event-card shadow-sm">
                     <div class="section-title">
-                        <span class="fs-4">💡</span> Basic Information
+                        <i class="bi bi-lightbulb-fill fs-4" style="color: #7c3aed;"></i> Basic Information
                     </div>
                     <div class="mb-3">
                         <label asp-for="EventName" class="form-label">Event Title</label>
@@ -100,7 +99,7 @@
 
                 <div class="event-card shadow-sm">
                     <div class="section-title">
-                        <span class="fs-4">📅</span> Date / Time
+                        <i class="bi bi-calendar-event-fill fs-4" style="color: #7c3aed;"></i> Date / Time
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -128,7 +127,7 @@
             <div class="col-lg-5">
                 <div class="event-card shadow-sm">
                     <div class="section-title">
-                        <span class="fs-4">📍</span> Location
+                        <i class="bi bi-geo-alt-fill fs-4" style="color: #7c3aed;"></i> Location
                     </div>
                     <div class="mb-3">
                         <label asp-for="Venue" class="form-label">Venue / Address</label>
@@ -140,7 +139,7 @@
                     <div class="col-md-12">
                         <div class="event-card shadow-sm">
                             <div class="section-title">
-                                <span class="fs-4">👥</span> Capacity
+                                <i class="bi bi-people-fill fs-4" style="color: #7c3aed;"></i> Capacity
                             </div>
                             <label asp-for="Capacity" class="form-label">Max Participants</label>
                             <input asp-for="Capacity" class="form-control" type="number" />
@@ -150,7 +149,7 @@
 
                 <div class="event-card shadow-sm">
                     <div class="section-title">
-                        <span class="fs-4">👤</span> Organizer Info
+                        <i class="bi bi-person-fill fs-4" style="color: #7c3aed;"></i> Organizer Info
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Organizer Name</label>
@@ -169,6 +168,7 @@
                 </div>
             </div>
         </div>
+
         <div class="card shadow-sm mb-4" style="background-color: #ede2ff; border-radius: 12px; border: none;">
             <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0 d-flex align-items-center gap-2">
                 <i class="bi bi-credit-card fs-4" style="color: #7c3aed;"></i>
@@ -207,18 +207,19 @@
                 </div>
             </div>
         </div>
+
         <div class="d-flex justify-content-between mt-4 pb-5">
-            <a asp-controller="Events" asp-action="Index" class="btn btn-light rounded-pill px-4">❌ Cancel</a>
+            <a asp-controller="Events" asp-action="Index" class="btn btn-light rounded-pill px-4">
+                <i class="bi bi-x-circle me-1"></i> Cancel
+            </a>
             <div class="d-flex gap-2">
-                <button type="button" class="btn btn-draft shadow-sm">💾 Save as Draft</button>
-                <button type="submit" class="btn btn-create shadow-sm">✅ Create Event</button>
+                <button type="button" class="btn btn-draft shadow-sm">
+                    <i class="bi bi-floppy me-1"></i> Save as Draft
+                </button>
+                <button type="submit" class="btn btn-create shadow-sm">
+                    <i class="bi bi-check-circle me-1"></i> Create Event
+                </button>
             </div>
         </div>
     </form>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
