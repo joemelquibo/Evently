@@ -9,8 +9,6 @@ namespace Evently.Models
         public string LastName { get; set; } = "";
         public string Email { get; set; } = "";
         public string Phone { get; set; } = "";
-        public string Gender { get; set; } = "N/A";   // not in Users model; kept for display
-        public string Address { get; set; } = "N/A";  // not in Users model; kept for display
         public string Role { get; set; } = "";
         public int EventCount { get; set; } = 0;
 

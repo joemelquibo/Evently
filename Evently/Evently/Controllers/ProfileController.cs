@@ -17,12 +17,10 @@ namespace Evently.Controllers
         // GET: /Profile
         public async Task<IActionResult> Index()
         {
-            // Read the logged-in user's ID from session
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
-                return RedirectToAction("Index", "Account"); // redirect to login if no session
+                return RedirectToAction("Index", "Account");
 
-            // Load user + role from DB
             var user = await _db.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.UserId == userId.Value);
@@ -30,16 +28,13 @@ namespace Evently.Controllers
             if (user == null)
                 return NotFound();
 
-            // Load this user's registrations + related events
             var registrations = await _db.Registrations
                 .Include(r => r.Event)
                 .Where(r => r.User.UserId == userId.Value)
                 .ToListAsync();
 
-            // Build event history list
             var eventHistory = registrations.Select(r =>
             {
-                // Map EventStatus enum to display string
                 string status = r.Event.Status switch
                 {
                     Events.EventStatus.Scheduled => "Upcoming",
@@ -48,7 +43,6 @@ namespace Evently.Controllers
                     _ => r.Event.Status.ToString()
                 };
 
-                // Map RegistrationStatus to attendance display
                 string attendance = r.Status switch
                 {
                     Registrations.RegistrationStatus.Confirmed => "Yes",
@@ -78,6 +72,61 @@ namespace Evently.Controllers
             };
 
             return View(model);
+        }
+
+        // GET: /Profile/Edit
+        public async Task<IActionResult> Edit()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Index", "Account");
+
+            var user = await _db.Users
+                .FirstOrDefaultAsync(u => u.UserId == userId.Value);
+
+            if (user == null)
+                return NotFound();
+
+            var model = new EditProfileViewModel
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.PhoneNum
+            };
+
+            return View(model);
+        }
+
+        // POST: /Profile/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            // Extra safety: make sure the session user matches the form's UserId
+            var sessionUserId = HttpContext.Session.GetInt32("UserId");
+            if (sessionUserId == null || sessionUserId.Value != model.UserId)
+                return RedirectToAction("Index", "Account");
+
+            var user = await _db.Users
+                .FirstOrDefaultAsync(u => u.UserId == model.UserId);
+
+            if (user == null)
+                return NotFound();
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.PhoneNum = model.Phone;
+
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] = "Profile updated successfully!";
+            return RedirectToAction("Index");
         }
     }
 }
