@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "DASHBOARD";
-
     var firstEvent = Model?.FirstOrDefault();
 }
 
@@ -13,32 +12,20 @@
 
         <!-- TOTAL EVENTS -->
         <div class="stat-card">
-
-            <div class="stat-icon">📅</div>
-
-            <div class="stat-label">
-                Total Events
+            <div class="stat-icon">
+                <i class="bi bi-calendar-week-fill" style="color:#7c3aed;"></i>
             </div>
-
-            <div class="stat-value">
-                @ViewBag.TotalEvents
-            </div>
-
+            <div class="stat-label">Total Events</div>
+            <div class="stat-value">@ViewBag.TotalEvents</div>
         </div>
 
         <!-- ACTIVE EVENTS -->
         <div class="stat-card">
-
-            <div class="stat-icon">🏷️</div>
-
-            <div class="stat-label">
-                Active Events
+            <div class="stat-icon">
+                <i class="bi bi-tags-fill" style="color:#7c3aed;"></i>
             </div>
-
-            <div class="stat-value">
-                @ViewBag.ActiveEvents
-            </div>
-
+            <div class="stat-label">Active Events</div>
+            <div class="stat-value">@ViewBag.ActiveEvents</div>
         </div>
 
     </div>
@@ -48,111 +35,60 @@
 
         <!-- RECENT EVENTS -->
         <div class="dash-card">
-
-            <div class="dash-card-title">
-                Recent Events
-            </div>
-
+            <div class="dash-card-title">Recent Events</div>
             <table class="events-table">
-
                 <thead>
-
                     <tr>
                         <th>Event</th>
                         <th>Date/Time</th>
                         <th>Venue</th>
                         <th>Status</th>
                     </tr>
-
                 </thead>
-
                 <tbody>
-
                     @if (Model != null && Model.Any())
                     {
                         @foreach (var e in Model)
                         {
                             <tr class="event-row"
-                                onclick="selectEvent(
-                                '@e.EventId',
-                                '@e.EventName'
-                                )">
-
-                                <td>
-                                    @e.EventName
-                                </td>
-
+                                onclick="selectEvent('@e.EventId', '@e.EventName')">
+                                <td>@e.EventName</td>
                                 <td>
                                     @e.EventDate.ToString("MMM dd"),
                                     @e.StartTime.ToString(@"hh\:mm")
                                 </td>
-
+                                <td>@(string.IsNullOrEmpty(e.Venue) ? "—" : e.Venue)</td>
                                 <td>
-                                    @(string.IsNullOrEmpty(e.Venue)
-                                        ? "—"
-                                        : e.Venue)
-                                </td>
-
-                                <td>
-
                                     <span class="badge
-                                        @(e.Status == Evently.Models.Events.EventStatus.Scheduled
-                                                                                                                                ? "badge-scheduled"
-                                                                                                                                : e.Status == Evently.Models.Events.EventStatus.Ongoing
-                                                                                                                                    ? "badge-ongoing"
-                                                                                                                                    : e.Status == Evently.Models.Events.EventStatus.Completed
-                                                                                                                                        ? "badge-completed"
-                                                                                                                                        : "badge-cancelled")">
-
+                                                @(e.Status == Evently.Models.Events.EventStatus.Scheduled ? "badge-scheduled"
+                                                                                  : e.Status == Evently.Models.Events.EventStatus.Ongoing ? "badge-ongoing"
+                                                                                  : e.Status == Evently.Models.Events.EventStatus.Completed ? "badge-completed"
+                                                                                  : "badge-cancelled")">
                                         @e.Status
-
                                     </span>
-
                                 </td>
-
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-
-                            <td colspan="4"
-                                style="text-align:center;">
-
-                                No events found
-
-                            </td>
-
+                            <td colspan="4" style="text-align:center;">No events found</td>
                         </tr>
                     }
-
                 </tbody>
-
             </table>
-
         </div>
 
         <!-- ATTENDANCE OVERVIEW -->
         <div class="dash-card att-card">
 
-            <div class="dash-card-title">
-                Attendance Overview
-            </div>
+            <div class="dash-card-title">Attendance Overview</div>
 
             <!-- EVENT TITLE -->
             <div id="selectedEventName"
-                 style="
-                font-weight:800;
-                margin-bottom:20px;
-                color:#3b0764;
-                font-size:1.05rem;
-                ">
-
-                @(firstEvent != null
-                    ? firstEvent.EventName
-                    : "No Event Selected")
-
+                 style="font-weight:800;margin-bottom:20px;color:#3b0764;font-size:1.05rem;">
+                @(firstEvent != null ? firstEvent.EventName : "No Event Selected")
             </div>
 
             <!-- MINI CARDS -->
@@ -160,125 +96,45 @@
 
                 <!-- PARTICIPANTS -->
                 <div class="att-mini-card">
-
                     <div class="att-mini-icon">
-                        👤
+                        <i class="bi bi-person-fill" style="color:#7c3aed;"></i>
                     </div>
-
-                    <div class="att-mini-label">
-                        Participants
-                    </div>
-
-                    <div class="att-mini-value"
-                         id="participantsCount">
-
-                        0
-
-                    </div>
-
+                    <div class="att-mini-label">Participants</div>
+                    <div class="att-mini-value" id="participantsCount">0</div>
                 </div>
 
                 <!-- ATTENDANCE RATE -->
                 <div class="att-mini-card">
-
                     <div class="att-mini-icon">
-                        ✅
+                        <i class="bi bi-check-circle-fill" style="color:#16a34a;"></i>
                     </div>
-
-                    <div class="att-mini-label">
-                        Attendance Rate
-                    </div>
-
-                    <div class="att-mini-value"
-                         id="attendanceRate">
-
-                        0%
-
-                    </div>
-
+                    <div class="att-mini-label">Attendance Rate</div>
+                    <div class="att-mini-value" id="attendanceRate">0%</div>
                 </div>
 
             </div>
 
-            <!-- DONUT -->
-            <div class="donut-wrap">
-
-                <svg width="110"
-                     height="110"
-                     viewBox="0 0 110 110">
-
-                    <circle cx="55"
-                            cy="55"
-                            r="42"
-                            fill="none"
-                            stroke="#ede9fe"
-                            stroke-width="14" />
-
-                    <circle id="progressRing"
-                            cx="55"
-                            cy="55"
-                            r="42"
-                            fill="none"
-                            stroke="#7c3aed"
-                            stroke-width="14"
-                            stroke-dasharray="0 264"
-                            stroke-linecap="round" />
-
-                    <text id="rateText"
-                          x="55"
-                          y="60"
-                          text-anchor="middle"
-                          font-size="15"
-                          font-weight="800"
-                          fill="#3d0072">
-
-                        0%
-
-                    </text>
-
-                </svg>
-
-            </div>
+       
 
             <!-- PRESENT -->
             <div class="att-row">
-
                 <span class="att-label">
-                    Present
+                    <i class="bi bi-person-check-fill me-2" style="color:#16a34a;"></i>Present
                 </span>
-
-                <span class="att-value"
-                      id="presentCount">
-
-                    0
-
-                </span>
-
+                <span class="att-value" id="presentCount">0</span>
             </div>
 
             <!-- ABSENT -->
             <div class="att-row">
-
                 <span class="att-label">
-                    Absent
+                    <i class="bi bi-person-x-fill me-2" style="color:#dc2626;"></i>Absent
                 </span>
-
-                <span class="att-value"
-                      id="absentCount">
-
-                    0
-
-                </span>
-
+                <span class="att-value" id="absentCount">0</span>
             </div>
 
             <!-- BUTTON -->
-            <a id="detailsBtn"
-                   href="#"
-                   class="btn-view">
-
-                View Details
-
+            <a id="detailsBtn" href="#" class="btn-view">
+                <i class="bi bi-eye-fill me-2"></i>View Details
             </a>
 
         </div>
@@ -288,97 +144,39 @@
 </div>
 
 @section Styles {
-
-    <link rel="stylesheet"
-          href="~/css/dashboard.css"
-          asp-append-version="true" />
-
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
 }
 
 @section Scripts {
-
     <script>
+        function selectEvent(id, name) {
+            document.getElementById("selectedEventName").innerText = name;
 
-        function selectEvent(id, name)
-        {
-            // EVENT NAME
-            document.getElementById(
-                "selectedEventName"
-            ).innerText = name;
+            let participants = Math.floor(Math.random() * 100);
+            let present      = Math.floor(Math.random() * participants);
+            let absent       = participants - present;
+            let rate         = participants > 0
+                               ? Math.round((present / participants) * 100)
+                               : 0;
 
-            // DEMO DATA
-            let participants =
-                Math.floor(Math.random() * 100);
+            document.getElementById("participantsCount").innerText = participants;
+            document.getElementById("presentCount").innerText      = present;
+            document.getElementById("absentCount").innerText       = absent;
+            document.getElementById("attendanceRate").innerText    = rate + "%";
+            document.getElementById("rateText").innerText         = rate + "%";
 
-            let present =
-                Math.floor(Math.random() * participants);
-
-            let absent =
-                participants - present;
-
-            let rate =
-                participants > 0
-                ? Math.round(
-                    (present / participants) * 100
-                  )
-                : 0;
-
-            // PARTICIPANTS
-            document.getElementById(
-                "participantsCount"
-            ).innerText = participants;
-
-            // PRESENT
-            document.getElementById(
-                "presentCount"
-            ).innerText = present;
-
-            // ABSENT
-            document.getElementById(
-                "absentCount"
-            ).innerText = absent;
-
-            // RATE
-            document.getElementById(
-                "attendanceRate"
-            ).innerText = rate + "%";
-
-            document.getElementById(
-                "rateText"
-            ).innerText = rate + "%";
-
-            // DONUT
             let circumference = 264;
+            let progress      = (rate / 100) * circumference;
+            document.getElementById("progressRing")
+                    .setAttribute("stroke-dasharray", `${progress} ${circumference}`);
 
-            let progress =
-                (rate / 100) * circumference;
-
-            document.getElementById(
-                "progressRing"
-            ).setAttribute(
-                "stroke-dasharray",
-                `${progress} ${circumference}`
-            );
-
-        // BUTTON LINK
-        document.getElementById(
-            "detailsBtn"
-        ).href =
-            "/Events/AttendanceDetails/" + id;
+            document.getElementById("detailsBtn").href =
+                "/Events/AttendanceDetails/" + id;
         }
 
-        // AUTO LOAD FIRST EVENT
-        window.onload = function ()
-        {
-            const firstRow =
-                document.querySelector(".event-row");
-
-            if (firstRow)
-            {
-                firstRow.click();
-            }
+        window.onload = function () {
+            const firstRow = document.querySelector(".event-row");
+            if (firstRow) firstRow.click();
         };
-
     </script>
-
 }

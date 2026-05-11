@@ -1,0 +1,54 @@
+﻿@model List<Evently.ViewComponents.NotificationItem>
+
+@* ── Notification Bell Wrapper (drop-in replacement for the bell <a> in _Layout) ── *@
+<div class="notif-wrapper">
+
+    @* Bell button with live badge *@
+    <button class="topbar-icon-btn notif-btn" id="notifToggle" title="Notifications"
+            aria-expanded="false" aria-controls="notifDropdown">
+        <i class="bi bi-bell"></i>
+        @if (Model.Any())
+        {
+            <span class="notif-badge">@(Model.Count > 9 ? "9+" : Model.Count.ToString())</span>
+        }
+    </button>
+
+    @* Dropdown panel *@
+    <div class="notif-dropdown" id="notifDropdown" role="region" aria-label="Notifications">
+
+        <div class="notif-header">
+            <span>Notifications</span>
+            @if (Model.Any())
+            {
+                <span class="notif-count-label">@Model.Count new</span>
+            }
+        </div>
+
+        <div class="notif-list">
+            @if (!Model.Any())
+            {
+                <div class="notif-empty">
+                    <i class="bi bi-bell-slash"></i>
+                    <p>No notifications right now</p>
+                </div>
+            }
+            else
+            {
+                foreach (var n in Model)
+                {
+                    <a href="/Events/Details/@n.EventId" class="notif-item notif-type-@n.Type" style="text-decoration:none;">
+                        <span class="notif-item-icon">
+                            <i class="bi @n.Icon"></i>
+                        </span>
+                        <div class="notif-item-body">
+                            <p class="notif-item-title">@n.Title</p>
+                            <p class="notif-item-msg">@n.Message</p>
+                            <p class="notif-item-time">@n.Time</p>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+
+    </div>
+</div>
