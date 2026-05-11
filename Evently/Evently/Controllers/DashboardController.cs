@@ -13,33 +13,85 @@ namespace Evently.Controllers
             _context = context;
         }
 
+        // DASHBOARD
         [HttpGet]
         public IActionResult Index()
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-                return RedirectToAction("Index", "Account");
+            // CHECK LOGIN
+            var userId =
+                HttpContext.Session.GetInt32("UserId");
 
-            var role = HttpContext.Session.GetString("UserRole");
-            if (role != "Admin" && role != "Organizer")
+            if (userId == null)
             {
-                // Redirect non-staff users to the events page
-                return RedirectToAction("Index", "Events");
+                return RedirectToAction(
+                    "Index",
+                    "Account"
+                );
             }
 
-            // Stats using ViewBag — from notes pattern
-            ViewBag.TotalEvents = _context.Events.Count();
+            // CHECK ROLE
+            var role =
+                HttpContext.Session.GetString("UserRole");
 
-            ViewBag.ActiveEvents = _context.Events
-                .Count(e => e.Status == Events.EventStatus.Ongoing);
+            if (role != "Admin" &&
+                role != "Organizer")
+            {
+                // PARTICIPANTS REDIRECT
+                return RedirectToAction(
+                    "Index",
+                    "Events"
+                );
+            }
 
-            ViewBag.Participants = _context.Registrations.Count();
+            // GET EVENTS
+            var events =
+                _context.Events
+                    .OrderByDescending(e => e.EventDate)
+                    .ToList();
 
-            ViewBag.AttendanceRate = _context.Attendances.Any()
+            // STATS
+
+            // TOTAL EVENTS
+            ViewBag.TotalEvents =
+                events.Count;
+
+            // ACTIVE EVENTS
+            ViewBag.ActiveEvents =
+                events.Count(e =>
+                    e.Status ==
+                    Events.EventStatus.Ongoing
+                    ||
+                    e.Status ==
+                    Events.EventStatus.Scheduled);
+
+            // PARTICIPANTS
+            ViewBag.Participants =
+                _context.Registrations.Count();
+
+            // PRESENT COUNT
+            ViewBag.PresentCount =
+                _context.Attendances
+                    .Count(a =>
+                        a.Status ==
+                        Attendances.AttendanceStatus.Present);
+
+            // ABSENT COUNT
+            ViewBag.AbsentCount =
+                _context.Attendances
+                    .Count(a =>
+                        a.Status ==
+                        Attendances.AttendanceStatus.Absent);
+
+            // ATTENDANCE RATE
+            var totalAttendance =
+                _context.Attendances.Count();
+
+            ViewBag.AttendanceRate =
+                totalAttendance > 0
                 ? (int)Math.Round(
-                    _context.Attendances
-                        .Count(a => a.Status == Attendances.AttendanceStatus.Present)
-                    * 100.0 / _context.Attendances.Count())
+                    ViewBag.PresentCount
+                    * 100.0
+                    / totalAttendance)
                 : 0;
 
             // This avoids casting issues with nullable UserId
@@ -63,7 +115,10 @@ namespace Evently.Controllers
             ViewBag.AbsentCount = _context.Attendances
                 .Count(a => a.Status == Attendances.AttendanceStatus.Absent);
 
-            return View("~/Views/Home/Index.cshtml");
+            return View(
+                "~/Views/Home/Index.cshtml",
+                events
+            );
         }
     }
 }

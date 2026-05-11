@@ -1,5 +1,4 @@
-﻿
-:root {
+﻿:root {
     --card-bg: #ffffff;
     --card-radius: 16px;
     --text-dark: #1a0036;
@@ -21,10 +20,10 @@
     gap: 28px;
 }
 
-/* ── STAT CARDS ── */
+/* ── STAT CARDS (now only 2 cards: Total Events + Active Events) ── */
 .stats-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 18px;
 }
 
@@ -46,14 +45,6 @@
 
     .stat-card:nth-child(2) {
         animation-delay: 0.10s;
-    }
-
-    .stat-card:nth-child(3) {
-        animation-delay: 0.15s;
-    }
-
-    .stat-card:nth-child(4) {
-        animation-delay: 0.20s;
     }
 
     .stat-card:hover {
@@ -160,6 +151,11 @@
     color: var(--status-completed-txt);
 }
 
+.badge-cancelled {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
 /* ── ATTENDANCE CARD ── */
 .donut-wrap {
     display: flex;
@@ -194,25 +190,74 @@
     color: var(--bg-deep);
 }
 
+/* ── VIEW DETAILS BUTTON ── */
 .btn-view {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     margin-top: 14px;
     background: #38bdf8;
     color: #fff;
     border: none;
     border-radius: 50px;
-    padding: 11px 0;
+    padding: 12px 18px;
     font-family: inherit;
     font-size: 0.88rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.17s, transform 0.14s;
+    transition: background 0.17s, transform 0.14s, box-shadow 0.14s;
+    box-sizing: border-box;
 }
 
     .btn-view:hover {
         background: #0ea5e9;
         transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(14,165,233,0.28);
     }
+
+/* ── ATTENDANCE MINI CARDS (Participants + Attendance Rate) ── */
+.att-mini-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.att-mini-card {
+    flex: 1;
+    background: #faf5ff;
+    border-radius: 12px;
+    border: 1px solid #ede9fe;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+
+    .att-mini-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(80,0,160,0.12);
+    }
+
+.att-mini-icon {
+    font-size: 1.3rem;
+    margin-bottom: 2px;
+}
+
+.att-mini-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-mid);
+}
+
+.att-mini-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1;
+}
 
 @keyframes fadeUp {
     from {
@@ -225,4 +270,35 @@
         transform: translateY(0);
     }
 }
+/* MINI ATTENDANCE CARDS */
+.att-mini-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 22px;
+}
 
+.att-mini-card {
+    flex: 1;
+    background: #f3e8ff;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.att-mini-icon {
+    font-size: 1.4rem;
+}
+
+.att-mini-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #6b21a8;
+}
+
+.att-mini-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #2e1065;
+}

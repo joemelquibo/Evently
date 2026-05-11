@@ -7,6 +7,21 @@
     min-height: 0;
 }
 
+/* ── Calendar event modal ── */
+.cal-cell.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    .cal-cell.clickable:hover {
+        background-color: #f3f0ff;
+    }
+
+
+.modal {
+    z-index: 1060 !important;
+}
+
 /* ── Events Sidebar ── */
 .events-panel {
     width: 170px;

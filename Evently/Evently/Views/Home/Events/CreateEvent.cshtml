@@ -5,116 +5,217 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form asp-controller="Events" asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
+<style>
+    .event-card {
+        background-color: #E7DBFF; /* Light purple background */
+        border-radius: 20px;
+        border: none;
+        margin-bottom: 20px;
+        padding: 20px;
+    }
 
-    <input type="hidden" asp-for="User" />
+    .form-label {
+        font-weight: 600;
+        color: #4A4A4A;
+        font-size: 0.9rem;
+    }
 
-    <div class="form-grid">
+    .form-control, .form-select {
+        border-radius: 10px;
+        border: 1px solid #D1C4E9;
+        padding: 10px;
+    }
 
-        <!-- LEFT SIDE -->
-        <div class="form-card">
-            <div class="card-title">💡 Basic Information</div>
+    .section-title {
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
-            <div class="field">
-                <label asp-for="EventName"></label>
-                <input asp-for="EventName" placeholder="Enter event title" />
-                <span asp-validation-for="EventName" class="text-danger"></span>
-            </div>
+    .btn-create {
+        background-color: #B2FF59;
+        color: #2e7d32;
+        font-weight: bold;
+        border-radius: 12px;
+        padding: 10px 25px;
+        border: none;
+    }
 
-            <div class="field">
-                <label asp-for="Description"></label>
-                <textarea asp-for="Description" placeholder="Describe your event"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-        </div>
+    .btn-draft {
+        background-color: #000;
+        color: #fff;
+        border-radius: 12px;
+        padding: 10px 25px;
+    }
+</style>
+<script>
+    function togglePaymentFields() {
+        const method = document.getElementById("payMethodSelect").value;
 
-        <!-- RIGHT SIDE -->
-        <div style="display:flex;flex-direction:column;gap:16px;">
+        // Hide everything first
+        document.getElementById("field-mobile").style.display = "none";
+        document.getElementById("field-bank").style.display = "none";
+        document.getElementById("field-cash").style.display = "none";
 
-            <div class="form-card">
-                <div class="card-title">📍 Location</div>
+        // Show specific field based on selection
+        if (method === "GCash" || method === "Maya") {
+            document.getElementById("field-mobile").style.display = "block";
+        } else if (method === "Bank Transfer") {
+            document.getElementById("field-bank").style.display = "block";
+        } else if (method === "Cash") {
+            document.getElementById("field-cash").style.display = "block";
+        }
+    }
+</script>
+<div class="container-fluid py-4">
+    <form asp-controller="Events" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-                <div class="field">
-                    <label asp-for="Venue"></label>
-                    <input asp-for="Venue" placeholder="Enter venue" />
-                    <span asp-validation-for="Venue" class="text-danger"></span>
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="event-card shadow-sm">
+                    <div class="section-title">
+                        <span class="fs-4">💡</span> Basic Information
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="EventName" class="form-label">Event Title</label>
+                        <input asp-for="EventName" class="form-control" placeholder="Event Title" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category / Type</label>
+                        <select class="form-select">
+                            <option>Conference</option>
+                            <option>Workshop</option>
+                            <option>Seminar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="event-card shadow-sm">
+                    <div class="section-title">
+                        <span class="fs-4">📅</span> Date / Time
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EventDate" class="form-label">Start Date</label>
+                            <input asp-for="EventDate" type="date" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StartTime" class="form-label">Start Time</label>
+                            <input asp-for="StartTime" type="time" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EndTime" class="form-label">End Time</label>
+                            <input asp-for="EndTime" type="time" class="form-control" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-card">
-                <div class="card-title">👥 Capacity</div>
+            <div class="col-lg-5">
+                <div class="event-card shadow-sm">
+                    <div class="section-title">
+                        <span class="fs-4">📍</span> Location
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Venue" class="form-label">Venue / Address</label>
+                        <input asp-for="Venue" class="form-control" placeholder="Venue / Address" />
+                    </div>
+                </div>
 
-                <div class="field">
-                    <label asp-for="Capacity"></label>
-                    <input asp-for="Capacity" type="number" min="1" />
-                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="event-card shadow-sm">
+                            <div class="section-title">
+                                <span class="fs-4">👥</span> Capacity
+                            </div>
+                            <label asp-for="Capacity" class="form-label">Max Participants</label>
+                            <input asp-for="Capacity" class="form-control" type="number" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="event-card shadow-sm">
+                    <div class="section-title">
+                        <span class="fs-4">👤</span> Organizer Info
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Organizer Name</label>
+                        <input type="text" class="form-control" placeholder="Name" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" placeholder="done@xxx.com" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" placeholder="09** *** ****" />
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
+        <div class="card shadow-sm mb-4" style="background-color: #ede2ff; border-radius: 12px; border: none;">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-credit-card fs-4" style="color: #7c3aed;"></i>
+                <h5 class="card-title mb-0 fw-bold">Payment Details</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted small">Amount to Pay</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">₱</span>
+                            <input type="text" name="PayAmt" class="form-control border-start-0 bg-light" value="200.00" readonly />
+                        </div>
+                    </div>
 
-        <!-- DATE & TIME -->
-        <div class="form-card highlight">
-            <div class="card-title">📅 Date & Time</div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted small">Payment Method</label>
+                        <select id="payMethodSelect" name="PayMethod" class="form-select" onchange="togglePaymentFields()">
+                            <option value="">-- Select Method --</option>
+                            <option value="GCash">GCash</option>
+                            <option value="Maya">Maya</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
 
-            <div class="date-row">
-
-                <div class="field">
-                    <label asp-for="EventDate"></label>
-                    <input asp-for="EventDate" type="date" />
+                    <div class="col-md-4 mb-3">
+                        <div id="field-mobile" style="display:none;">
+                            <label class="form-label text-muted small">Mobile Number</label>
+                            <input type="text" name="PaymentRef" class="form-control" placeholder="09** *** ****" />
+                        </div>
+                        <div id="field-bank" style="display:none;">
+                            <label class="form-label text-muted small">Account Number</label>
+                            <input type="text" name="PaymentRef" class="form-control" placeholder="****-****-****" />
+                        </div>
+                    </div>
                 </div>
-
-                <div class="field">
-                    <label asp-for="StartTime"></label>
-                    <input asp-for="StartTime" type="time" />
-                </div>
-
-                <div class="field">
-                    <label asp-for="EndTime"></label>
-                    <input asp-for="EndTime" type="time" />
-                </div>
-
             </div>
         </div>
-
-        <!-- STATUS -->
-        <div class="form-card">
-            <div class="card-title">⚙️ Status</div>
-
-            <div class="field">
-                <label asp-for="Status"></label>
-                <select asp-for="Status">
-                    <option value="Scheduled">Scheduled</option>
-                    <option value="Ongoing">Ongoing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
+        <div class="d-flex justify-content-between mt-4 pb-5">
+            <a asp-controller="Events" asp-action="Index" class="btn btn-light rounded-pill px-4">❌ Cancel</a>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-draft shadow-sm">💾 Save as Draft</button>
+                <button type="submit" class="btn btn-create shadow-sm">✅ Create Event</button>
             </div>
         </div>
-
-    </div>
-
-    <!-- ACTION BAR -->
-    <div class="action-bar">
-
-        <a asp-controller="Events" asp-action="Index" class="btn-cancel">
-            Cancel
-        </a>
-
-        <div class="btn-group">
-            <button type="submit" class="btn-create">
-                Create Event
-            </button>
-        </div>
-
-    </div>
-
-</form>
-
-@section Styles {
-    <link rel="stylesheet" href="~/css/create-event.css" asp-append-version="true" />
-}
+    </form>
+</div>
 
 @section Scripts {
     @{

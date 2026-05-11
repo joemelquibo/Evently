@@ -1,6 +1,9 @@
-﻿@{
+﻿@model List<Evently.Models.Events>
+
+@{
     ViewData["Title"] = "Calendar";
 
+    var safeModel = Model ?? new List<Evently.Models.Events>();
     var today = DateTime.Today;
     int currentMonth = (int?)ViewBag.Month ?? today.Month;
     int currentYear = (int?)ViewBag.Year ?? today.Year;
@@ -13,38 +16,47 @@
                             "July","August","September","October","November","December" };
     string[] dayNames = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
-    /* Sample events — replace with ViewBag.Events / model binding */
-    var events = new[]
+    /*
+       BRIDGE LOGIC:
+       Transform the DB Model into the format your calendar grid expects.
+    */
+    var events = Model.Select(e => new
     {
-        new { Day = 18, Title = "Design Systems Summit 2026",    Color = "#29B6F6" },
-        new { Day = 19, Title = "Design Systems Summit 2026",    Color = "#29B6F6" },
-        new { Day = 20, Title = "Design Systems Summit 2026",    Color = "#29B6F6" },
-        new { Day = 18, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
-        new { Day = 19, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
-        new { Day = 20, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
-        new { Day = 21, Title = "AI & Machine Learning Bootcamp", Color = "#F48FB1" },
-    };
+        Day = e.EventDate.Day,
+        Title = e.EventName,
+        // Dynamic coloring based on status
+        Color = e.Status switch
+        {
+            Evently.Models.Events.EventStatus.Ongoing => "#F48FB1",   // Pink for Live
+            Evently.Models.Events.EventStatus.Scheduled => "#29B6F6", // Blue for Upcoming
+            Evently.Models.Events.EventStatus.Cancelled => "#EF4444", // Red for Cancelled
+            _ => "#9E9E9E"                                            // Grey for Completed
+        }
+    }).ToList();
 
     /* Distinct events for the sidebar panel */
-    var distinctEvents = events
-        .GroupBy(e => e.Title)
+    var distinctEvents = Model
+        .GroupBy(e => e.EventName)
         .Select(g => new
         {
-            g.First().Title,
-            g.First().Color,
-            StartDay = g.Min(e => e.Day),
-            EndDay = g.Max(e => e.Day)
+            Title = g.Key,
+            Color = g.First().Status == Evently.Models.Events.EventStatus.Ongoing ? "#F48FB1" : "#29B6F6",
+            StartDay = g.Min(e => e.EventDate.Day),
+            EndDay = g.Max(e => e.EventDate.Day)
         })
         .ToList();
 }
 
-
-
 <div class="cal-page">
 
-    <!-- Events Panel -->
+    <!-- Events Panel (Sidebar) -->
     <div class="events-panel">
-        <div class="events-panel-title">📅 Events</div>
+        <div class="events-panel-title">📅 Events for @monthNames[currentMonth - 1]</div>
+
+        @if (!distinctEvents.Any())
+        {
+            <p style="padding: 20px; color: #888; font-style: italic;">No events scheduled for this month.</p>
+        }
 
         @foreach (var ev in distinctEvents)
         {
@@ -58,10 +70,10 @@
         }
     </div>
 
-    <!-- Calendar -->
+    <!-- Calendar Main Panel -->
     <div class="calendar-panel">
 
-        <!-- Month Tabs -->
+        <!-- Month Tabs Navigation -->
         <div class="month-tabs">
             @for (int m = 1; m <= 12; m++)
             {
@@ -94,27 +106,39 @@
                     </div>
                 }
 
-                /* Current month */
-                for (int day = 1; day <= daysInMonth; day++)
+                /* Current month days */
+                @for (int day = 1; day <= daysInMonth; day++)
                 {
+                    var dayEvents = safeModel.Where(e => e.EventDate.Day == day).ToList();
                     bool isToday = day == today.Day && currentMonth == today.Month && currentYear == today.Year;
-                    string cellCls = isToday ? "cal-cell today" : "cal-cell";
+                    string cellCls = isToday ? "cal-cell today clickable" : "cal-cell clickable";
+    
+                    var eventData = System.Text.Json.JsonSerializer.Serialize(dayEvents.Select(e => new
+                    {
+                        e.EventName,
+                        e.Venue,
+                        Time = e.StartTime.ToString(@"hh\:mm")
+                    }));
 
-                    <div class="@cellCls">
+                    <div class="@cellCls"
+                         data-day="@day"
+                         data-events="@eventData">
+        
                         <div class="cal-day-num">@day</div>
-                        @foreach (var ev in events.Where(e => e.Day == day))
+
+                        @foreach (var ev in dayEvents)
                         {
                             <div class="cal-event">
-                                <div class="cal-event-dot" style="background:@ev.Color"></div>
-                                <div class="cal-event-text">@ev.Title</div>
+                                <div class="cal-event-dot" style="background:@(ev.Status == Evently.Models.Events.EventStatus.Ongoing ? "#F48FB1" : "#29B6F6")"></div>
+                                <div class="cal-event-text">@ev.EventName</div>
                             </div>
                         }
                     </div>
                 }
 
                 /* Next month leading days */
-                int totalCells = startDayOfWeek + daysInMonth;
-                int remainingCells = totalCells % 7 == 0 ? 0 : 7 - (totalCells % 7);
+                int totalCellsSoFar = startDayOfWeek + daysInMonth;
+                int remainingCells = totalCellsSoFar % 7 == 0 ? 0 : 7 - (totalCellsSoFar % 7);
                 for (int i = 1; i <= remainingCells; i++)
                 {
                     <div class="cal-cell other-month">
@@ -123,11 +147,67 @@
                 }
             }
         </div>
-
     </div><!-- /calendar-panel -->
 </div><!-- /cal-page -->
 
+<div class="modal fade" id="eventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px; border: none;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="modalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+        </div>
+    </div>
+</div>
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Listen for clicks on any calendar cell
+            document.querySelectorAll('.cal-cell.clickable').forEach(cell => {
+                cell.addEventListener('click', function () {
+                    const day = this.getAttribute('data-day');
+                    const eventsData = this.getAttribute('data-events');
+                    
+                    if (!eventsData) return;
+
+                    const events = JSON.parse(eventsData);
+                    const modalBody = document.getElementById('modalBody');
+                    const modalTitle = document.getElementById('modalTitle');
+                    
+                    modalTitle.innerText = `Events for Day ${day}`;
+                    modalBody.innerHTML = '';
+
+                    if (events.length === 0) {
+                        modalBody.innerHTML = '<p class="text-muted p-3 text-center">No events scheduled for this day.</p>';
+                    } else {
+                        events.forEach(ev => {
+                            // Check for PascalCase which C# produces by default
+                            const name = ev.EventName || ev.eventName || "Untitled Event";
+                            const venue = ev.Venue || ev.venue || "No Venue";
+                            const time = ev.Time || ev.time || "No Time";
+
+                            modalBody.innerHTML += `
+                                <div class="p-3 mb-2 rounded shadow-sm" style="background: #f8f9fa; border-left: 4px solid #7c3aed;">
+                                    <h6 class="fw-bold mb-1">${name}</h6>
+                                    <p class="small mb-0 text-muted">📍 ${venue}</p>
+                                    <p class="small mb-0 text-muted">🕒 ${time}</p>
+                                </div>`;
+                        });
+                    }
+
+                    // Trigger the Bootstrap Modal
+                    const modalElement = document.getElementById('eventModal');
+                    const bModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                    bModal.show();
+                });
+            });
+        });
+    </script>
+}
 @section Styles {
     <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
 }

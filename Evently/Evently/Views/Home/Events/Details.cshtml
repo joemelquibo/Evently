@@ -1,0 +1,54 @@
+﻿@model Evently.Models.Events
+@{
+    ViewData["Title"] = "Event Details";
+    var role = Context.Session.GetString("UserRole");
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="border-radius: 20px; overflow: hidden;">
+        <div style="height: 150px; background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);"></div>
+
+        <div class="card-body p-4" style="margin-top: -50px;">
+            <div class="bg-white rounded-3 p-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1 class="fw-bold">@Model.EventName</h1>
+                        <p class="text-muted"><i class="bi bi-geo-alt"></i> @Model.Venue</p>
+                    </div>
+                    <span class="badge bg-primary px-3 py-2">@Model.Status</span>
+                </div>
+
+                <hr />
+
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold">Description</h5>
+                        <p>@Model.Description</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3" style="background-color: #f3f0ff;">
+                            <p class="mb-2"><strong>📅 Date:</strong> @Model.EventDate.ToString("MMM dd, yyyy")</p>
+                            <p class="mb-2"><strong>🕒 Time:</strong> @Model.StartTime to @Model.EndTime</p>
+                            <p class="mb-0"><strong>👥 Capacity:</strong> @Model.Capacity max</p>
+                            <p class="mb-0"><strong>✅ Registered:</strong> @(ViewBag.RegCount ?? 0) joined</p>
+                        </div>
+
+                        @if (role == "Participant")
+                        {
+                            <form asp-action="Join" asp-route-id="@Model.EventId" method="post" class="mt-3">
+                                <button type="submit" class="btn w-100 fw-bold py-2"
+                                        style="background-color: #a3f78e; color: #1a4f1a; border-radius: 12px; border: 1px solid #7ed368;">
+                                    ✨ Join Event
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a asp-action="Index" class="btn btn-light rounded-pill px-4">Back to Events</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
