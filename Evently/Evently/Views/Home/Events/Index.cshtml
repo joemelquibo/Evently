@@ -35,10 +35,9 @@
             <input type="text" id="searchBox" placeholder="Search..."
                    onkeyup="searchEvents()" class="search-box" />
 
-            <button onclick="toggleView('grid')" class="view-btn">⬛</button>
-            <button onclick="toggleView('list')" class="view-btn">☰</button>
+            <button onclick="toggleView('grid')" class="view-btn"><i class="bi bi-grid-fill"></i></button>
+            <button onclick="toggleView('list')" class="view-btn"><i class="bi bi-list-ul"></i></button>
 
-            <!-- Hiding the Create Button for non-admin and organizer accounts-->
             @{
                 var role = Context.Session.GetString("UserRole");
             }
@@ -46,7 +45,7 @@
             @if (role == "Admin" || role == "Organizer")
             {
                 <a asp-controller="Events" asp-action="Create" class="em-create-btn">
-                    + Create Event
+                    <i class="bi bi-plus-lg me-1"></i> Create Event
                 </a>
             }
 
@@ -80,9 +79,9 @@
 
                 var bandClass = status switch
                 {
-                    "Ongoing" => "band-ongoing",
-                    "Scheduled" => "band-upcoming",
-                    "Completed" => "band-ended",
+                                "Ongoing" => "band-ongoing",
+                                "Scheduled" => "band-upcoming",
+                                "Completed" => "band-ended",
                     _ => "band-ended"
                 };
 
@@ -96,7 +95,7 @@
                     <!-- HEADER -->
                     <div class="card-header-band @bandClass">
                         <div class="status-badge">@status</div>
-                        <div class="event-icon">🎤</div>
+                        <div class="event-icon"><i class="bi bi-mic-fill"></i></div>
                     </div>
 
                     <!-- BODY -->
@@ -104,45 +103,42 @@
 
                         <div class="card-title">@evt.EventName</div>
 
-                        <div class="meta-row">📅 @evt.EventDate.ToString("MMM dd, yyyy")</div>
-                        <div class="meta-row">📍 @evt.Venue</div>
-                        <div class="meta-row">📊 @registered / @evt.Capacity Registered</div>
+                        <div class="meta-row"><i class="bi bi-calendar-event me-1"></i> @evt.EventDate.ToString("MMM dd, yyyy")</div>
+                        <div class="meta-row"><i class="bi bi-geo-alt me-1"></i> @evt.Venue</div>
+                        <div class="meta-row"><i class="bi bi-bar-chart me-1"></i> @registered / @evt.Capacity Registered</div>
 
                     </div>
 
                     <!-- FOOTER -->
                     <div class="card-footer d-flex gap-2">
-                        <a asp-controller="Events" asp-action="Details" asp-route-id="@evt.EventId" 
-                           class="btn-view-card flex-grow-1 text-center" 
+                        <a asp-controller="Events" asp-action="Details" asp-route-id="@evt.EventId"
+                           class="btn-view-card flex-grow-1 text-center"
                            style="background: #7c3aed; color: white; padding: 5px 10px; border-radius: 8px; text-decoration: none; font-size: 0.85rem;">
-                           View Details
+                            View Details
                         </a>
 
                         @if (role == "Admin" || role == "Organizer")
                         {
-                            <a asp-controller="Events" 
-                                    asp-action="Edit" 
-                                    asp-route-id="@evt.EventId"
-                               class="btn-edit-card" 
-                               style="padding: 5px 10px; border: 1px solid #7c3aed; 
-                                      color: #7c3aed; border-radius: 8px; 
-                                      text-decoration: none; 
-                                      font-size: 0.85rem;">
-                               Edit
+                            <a asp-controller="Events"
+                               asp-action="Edit"
+                               asp-route-id="@evt.EventId"
+                               class="btn-edit-card"
+                               style="padding: 5px 10px; border: 1px solid #7c3aed;
+                                                  color: #7c3aed; border-radius: 8px;
+                                                  text-decoration: none;
+                                                  font-size: 0.85rem;">
+                                Edit
                             </a>
 
                             <a asp-controller="Events"
-                                   asp-action="Delete"
-                                   asp-route-id="@evt.EventId"
-                                   onclick="return confirm('Delete this event?')"
-                                   class="btn-delete-card">
-
-                                ✖
-
+                               asp-action="Delete"
+                               asp-route-id="@evt.EventId"
+                               onclick="return confirm('Delete this event?')"
+                               class="btn-delete-card">
+                                <i class="bi bi-x-lg"></i>
                             </a>
                         }
                     </div>
-                    
 
                 </div>
             }
@@ -152,20 +148,19 @@
             <div class="em-empty">
                 <h3>No events yet</h3>
 
-                <!-- Hiding Create button for participants -->
                 @if (role == "Admin" || role == "Organizer")
                 {
                     <p>Create your first event.</p>
 
                     <a asp-controller="Events" asp-action="Create" class="em-create-btn">
-                        + Create Event
+                        <i class="bi bi-plus-lg me-1"></i> Create Event
                     </a>
                 }
                 else
                 {
                     <p>Check back later for new events!</p>
                 }
-             
+
             </div>
         }
 
