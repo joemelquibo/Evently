@@ -27,21 +27,8 @@ namespace Evently.Controllers
         {
             return View("~/Views/Home/Index.cshtml");
         }
-
-        
-        // CALENDAR
-        
-        public IActionResult Calendar(int? month, int? year)
-        {
-            ViewBag.Month = month ?? DateTime.Today.Month;
-            ViewBag.Year = year ?? DateTime.Today.Year;
-
-            return View("~/Views/Home/Calendar.cshtml");
-        }
-
-        
         // PRIVACY
-       
+
         public IActionResult Privacy()
         {
             return View("~/Views/Home/Privacy.cshtml");
