@@ -42,7 +42,6 @@ namespace Evently.Controllers
                     * 100.0 / _context.Attendances.Count())
                 : 0;
 
-            // ✅ Materialize to List BEFORE passing to View
             // This avoids casting issues with nullable UserId
             ViewBag.RecentEvents = _context.Events
                 .OrderByDescending(e => e.EventDate)
