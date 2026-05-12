@@ -13,6 +13,8 @@ namespace Evently.Models
         public int EventCount { get; set; } = 0;
 
         public List<EventHistoryItem> EventHistory { get; set; } = new();
+
+        public decimal Balance { get; set; }
     }
 
     public class EventHistoryItem

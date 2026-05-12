@@ -68,7 +68,8 @@ namespace Evently.Controllers
                 Phone = user.PhoneNum,
                 Role = user.Role?.Role.ToString() ?? "User",
                 EventCount = eventHistory.Count,
-                EventHistory = eventHistory
+                EventHistory = eventHistory,
+                Balance = user.Balance
             };
 
             return View(model);
@@ -118,6 +119,27 @@ namespace Evently.Controllers
             if (user == null)
                 return NotFound();
 
+            // Profile Picture uploading logic
+            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+            {
+                // Define folder path in wwwroot
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/profiles");
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+
+                // Create a unique filename to avoid overwriting
+                string fileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
+                string filePath = Path.Combine(folder, fileName);
+
+                // Save the file to the server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.ProfileImage.CopyToAsync(stream);
+                }
+
+                // Update the database property with the relative path
+                user.ImageUrl = "/images/profiles/" + fileName;
+            }
+
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
@@ -126,6 +148,40 @@ namespace Evently.Controllers
             await _db.SaveChangesAsync();
 
             TempData["Success"] = "Profile updated successfully!";
+            return RedirectToAction("Index");
+        }
+
+        //CASH IN LOGIC
+        public IActionResult CashIn()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (User == null) return RedirectToAction("Index", "Account");
+
+            var model = new CashInViewModel { UserId = userId.Value };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CashIn(CashInViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var sessionUserId = HttpContext.Session.GetInt32("UserId");
+            if (sessionUserId == null || sessionUserId.Value != model.UserId)
+                return RedirectToAction("Index", "Account");
+
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == model.UserId);
+
+            if (user == null)
+                return NotFound();
+
+            user.Balance += model.Amount;
+
+            await _db.SaveChangesAsync();
+
+            TempData["Succes"] = $"Succesfully cashed in Php{model.Amount:C2}!";
             return RedirectToAction("Index");
         }
     }

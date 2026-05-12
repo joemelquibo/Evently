@@ -17,6 +17,12 @@ namespace Evently.Models
         //public required string ConfirmPassword { get; set; }
         public required string PhoneNum { get; set; }
 
+        [Column("balance")]
+        public decimal Balance { get; set; } = 0.00m;
+
+        [Column("image_url")]
+        public string? ImageUrl { get; set; }
+
         [ForeignKey("RoleId")]
         public required Roles Role { get; set; } 
 

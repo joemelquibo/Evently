@@ -67,10 +67,6 @@
             <header class="topbar">
                 <h1 class="topbar-title">@(ViewData["Title"]?.ToString()?.ToUpper() ?? "DASHBOARD")</h1>
                 <div class="topbar-right">
-                    <div class="topbar-search">
-                        <span class="topbar-search-icon"><i class="bi bi-search"></i></span>
-                        <input type="text" placeholder="Search…" />
-                    </div>
                     @await Component.InvokeAsync("Notification")
                     <a class="topbar-icon-btn" href="#" title="Sign out" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class="bi bi-box-arrow-right"></i>

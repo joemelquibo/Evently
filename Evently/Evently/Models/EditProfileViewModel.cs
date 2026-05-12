@@ -22,5 +22,7 @@ namespace Evently.Models
         [Phone]
         [Display(Name = "Phone")]
         public string Phone { get; set; } = "";
+
+        public IFormFile? ProfileImage { get; set; }
     }
 }
