@@ -18,13 +18,15 @@ namespace Evently.Controllers
             _context = context;
         }
 
-        // =========================
         // DASHBOARD
-        // =========================
         public IActionResult Index()
         {
-            // GET EVENTS
-            var events = _context.Events.ToList();
+            // GET EVENTS WITH ATTENDANCES
+            var events =
+                _context.Events
+                    .Include(e => e.Attendances)
+                    .OrderByDescending(e => e.EventDate)
+                    .ToList();
 
             // TOTAL EVENTS
             ViewBag.TotalEvents =
@@ -84,9 +86,7 @@ namespace Evently.Controllers
             return View(events);
         }
 
-        // =========================
         // ATTENDANCE DETAILS
-        // =========================
         public IActionResult AttendanceDetails(int id)
         {
             // EVENT
@@ -161,17 +161,13 @@ namespace Evently.Controllers
             );
         }
 
-        // =========================
         // PRIVACY
-        // =========================
         public IActionResult Privacy()
         {
             return View();
         }
 
-        // =========================
         // ERROR
-        // =========================
         [ResponseCache(
             Duration = 0,
             Location = ResponseCacheLocation.None,
@@ -187,9 +183,7 @@ namespace Evently.Controllers
                 });
         }
 
-        // =========================
         // CALENDAR
-        // =========================
         public IActionResult Calendar(
             int? month,
             int? year)

@@ -261,7 +261,7 @@ public IActionResult AttendanceDetails(int id)
         public IActionResult Join(int id)
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
-            string userRole = HttpContext.Session.GetString("UserRole");
+            string? userRole = HttpContext.Session.GetString("UserRole");
 
             // Check if event exists and if user is already registered
             var eventObj = _context.Events.Find(id);
@@ -280,11 +280,11 @@ public IActionResult AttendanceDetails(int id)
             var registration = new Registrations
             {
                 EventId = id,
-                UserId = userId.Value,
+                UserId = userId!.Value,
                 RegistrationDate = DateTime.UtcNow,
                 Status = Registrations.RegistrationStatus.Confirmed,
                 Event = eventObj,
-                User = _context.Users.Find(userId.Value)
+                User = _context.Users.Find(userId.Value)!
             };
 
             try

@@ -108,13 +108,13 @@
 
                             <!-- NAME -->
                             <td>
-                                @p.User.FirstName
-                                @p.User.LastName
+                                @p.User?.FirstName
+                                @p.User?.LastName
                             </td>
 
                             <!-- EMAIL -->
                             <td>
-                                @p.User.Email
+                                @p.User?.Email
                             </td>
 
                             <!-- STATUS -->
@@ -139,7 +139,7 @@
 
                             <!-- CHECK IN -->
                             <td>
-                                @p.checkInTime.ToString("MMM dd, yyyy hh:mm tt")
+                                @p.CheckInTime.ToString("MMM dd, yyyy hh:mm tt")
                             </td>
 
                         </tr>

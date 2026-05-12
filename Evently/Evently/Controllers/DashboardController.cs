@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Evently.DB;
 using Evently.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evently.Controllers
 {
@@ -45,9 +46,11 @@ namespace Evently.Controllers
 
             // GET EVENTS
             var events =
-                _context.Events
-                    .OrderByDescending(e => e.EventDate)
-                    .ToList();
+                 _context.Events
+                      .Include(e => e.Attendances!)
+                      .ThenInclude(a => a.User)
+                      .OrderByDescending(e => e.EventDate)
+                      .ToList();
 
             // STATS
 
@@ -66,7 +69,7 @@ namespace Evently.Controllers
 
             // PARTICIPANTS
             ViewBag.Participants =
-                _context.Registrations.Count();
+                _context.Attendances.Count();
 
             // PRESENT COUNT
             ViewBag.PresentCount =
@@ -94,27 +97,56 @@ namespace Evently.Controllers
                     / totalAttendance)
                 : 0;
 
-            // This avoids casting issues with nullable UserId
-            ViewBag.RecentEvents = _context.Events
-                .OrderByDescending(e => e.EventDate)
-                .Take(5)
-                .Select(e => new
-                {
-                    e.EventId,
-                    e.EventName,
-                    e.EventDate,
-                    e.StartTime,
-                    e.Venue,
-                    e.Status
-                })
-                .ToList();
+            // RECENT EVENTS
+            ViewBag.RecentEvents =
+                _context.Events
+                    .OrderByDescending(e => e.EventDate)
+                    .Take(5)
+                    .Select(e => new
+                    {
+                        e.EventId,
+                        e.EventName,
+                        e.EventDate,
+                        e.StartTime,
+                        e.Venue,
+                        e.Status
+                    })
+                    .ToList();
 
-            ViewBag.PresentCount = _context.Attendances
-                .Count(a => a.Status == Attendances.AttendanceStatus.Present);
+            // EVENT PARTICIPANTS
+            ViewBag.EventParticipants =
+                _context.Attendances
+                    .GroupBy(a => a.EventId)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Count()
+                    );
 
-            ViewBag.AbsentCount = _context.Attendances
-                .Count(a => a.Status == Attendances.AttendanceStatus.Absent);
+            // EVENT PRESENT
+            ViewBag.EventPresent =
+                _context.Attendances
+                    .Where(a =>
+                        a.Status ==
+                        Attendances.AttendanceStatus.Present)
+                    .GroupBy(a => a.EventId)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Count()
+                    );
 
+            // EVENT ABSENT
+            ViewBag.EventAbsent =
+                _context.Attendances
+                    .Where(a =>
+                        a.Status ==
+                        Attendances.AttendanceStatus.Absent)
+                    .GroupBy(a => a.EventId)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Count()
+                    );
+
+            // SEND EVENTS TO VIEW
             return View(
                 "~/Views/Home/Index.cshtml",
                 events
