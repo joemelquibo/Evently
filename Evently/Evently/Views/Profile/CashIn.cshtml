@@ -1,0 +1,253 @@
+﻿@model Evently.Models.CashInViewModel
+@{
+    ViewData["Title"] = "Cash In";
+}
+
+<div class="cashin-page">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="cashin-card">
+
+        <!-- Header -->
+        <div class="cashin-header">
+            <div class="cashin-header-icon">
+                <i class="bi bi-wallet2"></i>
+            </div>
+            <div>
+                <div class="cashin-header-title">Cash In</div>
+                <div class="cashin-header-sub">Add funds to your Evently wallet</div>
+            </div>
+        </div>
+
+        <!-- Balance display -->
+        <div class="balance-display">
+            <div class="balance-label">
+                <i class="bi bi-piggy-bank-fill me-1"></i> Current Balance
+            </div>
+            <div class="balance-amount">₱ @Model.CurrentBalance.ToString("N2")</div>
+        </div>
+
+        <!-- Payment Method Selector -->
+        <div class="payment-section">
+            <div class="quick-label">Select Payment Method</div>
+
+            <div class="payment-tabs">
+                <button type="button" class="payment-tab active" onclick="switchTab('ewallet', this)">
+                    <i class="bi bi-phone-fill me-1"></i> E-Wallet
+                </button>
+                <button type="button" class="payment-tab" onclick="switchTab('bank', this)">
+                    <i class="bi bi-bank2 me-1"></i> Bank
+                </button>
+            </div>
+
+            <!-- E-Wallets -->
+            <div class="payment-methods" id="ewallet-methods">
+                <div class="payment-card" onclick="selectMethod(this, 'GCash')" data-method="GCash">
+                    <div class="payment-card-icon" style="background:#0066cc;">
+                        <i class="bi bi-phone-fill"></i>
+                    </div>
+                    <div class="payment-card-info">
+                        <div class="payment-card-name">GCash</div>
+                        <div class="payment-card-sub">Via mobile number</div>
+                    </div>
+                    <i class="bi bi-check-circle-fill payment-check"></i>
+                </div>
+                <div class="payment-card" onclick="selectMethod(this, 'Maya')" data-method="Maya">
+                    <div class="payment-card-icon" style="background:#00b96b;">
+                        <i class="bi bi-wallet-fill"></i>
+                    </div>
+                    <div class="payment-card-info">
+                        <div class="payment-card-name">Maya</div>
+                        <div class="payment-card-sub">Via mobile number</div>
+                    </div>
+                    <i class="bi bi-check-circle-fill payment-check"></i>
+                </div>
+            </div>
+
+            <!-- Banks -->
+            <div class="payment-methods" id="bank-methods" style="display:none;">
+                <div class="payment-card" onclick="selectMethod(this, 'BDO')" data-method="BDO">
+                    <div class="payment-card-icon" style="background:#003087;">
+                        <i class="bi bi-building-fill"></i>
+                    </div>
+                    <div class="payment-card-info">
+                        <div class="payment-card-name">BDO</div>
+                        <div class="payment-card-sub">Banco de Oro</div>
+                    </div>
+                    <i class="bi bi-check-circle-fill payment-check"></i>
+                </div>
+                <div class="payment-card" onclick="selectMethod(this, 'BPI')" data-method="BPI">
+                    <div class="payment-card-icon" style="background:#cc0000;">
+                        <i class="bi bi-bank2"></i>
+                    </div>
+                    <div class="payment-card-info">
+                        <div class="payment-card-name">BPI</div>
+                        <div class="payment-card-sub">Bank of the Philippine Islands</div>
+                    </div>
+                    <i class="bi bi-check-circle-fill payment-check"></i>
+                </div>
+                <div class="payment-card" onclick="selectMethod(this, 'UnionBank')" data-method="UnionBank">
+                    <div class="payment-card-icon" style="background:#f26522;">
+                        <i class="bi bi-building-fill"></i>
+                    </div>
+                    <div class="payment-card-info">
+                        <div class="payment-card-name">UnionBank</div>
+                        <div class="payment-card-sub">UnionBank of the Philippines</div>
+                    </div>
+                    <i class="bi bi-check-circle-fill payment-check"></i>
+                </div>
+                <div class="payment-card" onclick="selectMethod(this, 'Metrobank')" data-method="Metrobank">
+                    <div class="payment-card-icon" style="background:#ffcc00; color:#000;">
+                        <i class="bi bi-building-fill"></i>
+                    </div>
+                    <div class="payment-card-info">
+                        <div class="payment-card-name">Metrobank</div>
+                        <div class="payment-card-sub">Metropolitan Bank</div>
+                    </div>
+                    <i class="bi bi-check-circle-fill payment-check"></i>
+                </div>
+            </div>
+
+            <!-- No method selected warning -->
+            <div class="payment-warning" id="methodWarning" style="display:none;">
+                <i class="bi bi-exclamation-circle-fill me-1"></i> Please select a payment method.
+            </div>
+        </div>
+
+        <!-- Amount quick-select -->
+        <div class="quick-amounts">
+            <div class="quick-label">Quick Select</div>
+            <div class="quick-grid">
+                @foreach (var amt in new[] { 50, 100, 200, 500, 1000, 2000 })
+                {
+                    <button type="button" class="quick-btn" onclick="setAmount(@amt)">
+                        ₱@amt
+                    </button>
+                }
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form asp-action="CashIn" asp-controller="Profile" method="post" id="cashInForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" id="selectedMethodInput" name="PaymentMethod" value="" />
+
+            <div class="cashin-form-group">
+                <label asp-for="Amount" class="cashin-label">
+                    <i class="bi bi-currency-exchange me-1"></i> Enter Amount (₱)
+                </label>
+                <div class="cashin-input-wrap">
+                    <span class="cashin-input-prefix">₱</span>
+                    <input asp-for="Amount"
+                           id="amountInput"
+                           type="number"
+                           min="1"
+                           step="0.01"
+                           placeholder="0.00"
+                           class="cashin-input" />
+                </div>
+                <span asp-validation-for="Amount" class="cashin-error"></span>
+            </div>
+
+            <!-- Preview -->
+            <div class="cashin-preview" id="previewBox" style="display:none;">
+                <i class="bi bi-arrow-up-circle-fill" style="color:#16a34a;"></i>
+                <span>
+                    New balance after cash in: <strong id="previewBalance">₱0.00</strong>
+                    <span id="previewMethod" style="color:#7c3aed; margin-left:6px;"></span>
+                </span>
+            </div>
+
+            <div class="cashin-actions">
+                <a asp-action="Index" asp-controller="Profile" class="cancel-btn">
+                    <i class="bi bi-arrow-left me-1"></i> Cancel
+                </a>
+                <button type="button" class="cashin-submit-btn" onclick="submitCashIn()">
+                    <i class="bi bi-plus-circle-fill me-2"></i> Confirm Cash In
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script>
+        const currentBalance = @Model.CurrentBalance;
+        const input          = document.getElementById('amountInput');
+        const previewBox     = document.getElementById('previewBox');
+        const previewBalance = document.getElementById('previewBalance');
+        const previewMethod  = document.getElementById('previewMethod');
+        let   selectedMethod = '';
+
+        // ── Tab switch ──
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.payment-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.getElementById('ewallet-methods').style.display = tab === 'ewallet' ? 'flex' : 'none';
+            document.getElementById('bank-methods').style.display    = tab === 'bank'    ? 'flex' : 'none';
+
+            // deselect current method if switching tabs
+            document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
+            selectedMethod = '';
+            document.getElementById('selectedMethodInput').value = '';
+            updatePreview();
+        }
+
+        // ── Select a payment card ──
+        function selectMethod(card, method) {
+            document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedMethod = method;
+            document.getElementById('selectedMethodInput').value = method;
+            document.getElementById('methodWarning').style.display = 'none';
+            updatePreview();
+        }
+
+        // ── Quick amount ──
+        function setAmount(val) {
+            input.value = val;
+            updatePreview();
+            document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // ── Preview ──
+        function updatePreview() {
+            const amt = parseFloat(input.value);
+            if (!isNaN(amt) && amt > 0) {
+                const newBal = currentBalance + amt;
+                previewBalance.textContent = '₱' + newBal.toLocaleString('en-PH', { minimumFractionDigits: 2 });
+                previewMethod.textContent  = selectedMethod ? 'via ' + selectedMethod : '';
+                previewBox.style.display   = 'flex';
+            } else {
+                previewBox.style.display = 'none';
+            }
+        }
+
+        input.addEventListener('input', () => {
+            document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+            updatePreview();
+        });
+
+        // ── Submit guard ──
+        function submitCashIn() {
+            if (!selectedMethod) {
+                document.getElementById('methodWarning').style.display = 'flex';
+                return;
+            }
+            document.getElementById('cashInForm').submit();
+        }
+    </script>
+}

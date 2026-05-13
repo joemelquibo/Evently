@@ -423,3 +423,21 @@ html, body {
     color: #a78bfa;
     font-weight: 600;
 }
+
+.topbar-balance {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.20);
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+    .topbar-balance i {
+        font-size: 1rem;
+        color: #a78bfa;
+    }

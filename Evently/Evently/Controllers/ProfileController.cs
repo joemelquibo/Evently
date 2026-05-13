@@ -69,7 +69,8 @@ namespace Evently.Controllers
                 Role = user.Role?.Role.ToString() ?? "User",
                 EventCount = eventHistory.Count,
                 EventHistory = eventHistory,
-                Balance = user.Balance
+                Balance = user.Balance,
+                ImageUrl = user.ImageUrl
             };
 
             return View(model);
@@ -94,7 +95,8 @@ namespace Evently.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Phone = user.PhoneNum
+                Phone = user.PhoneNum,
+                CurrentImageUrl = user.ImageUrl
             };
 
             return View(model);
@@ -152,12 +154,20 @@ namespace Evently.Controllers
         }
 
         //CASH IN LOGIC
-        public IActionResult CashIn()
+        // GET: /Profile/CashIn
+        public async Task<IActionResult> CashIn()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            if (User == null) return RedirectToAction("Index", "Account");
+            if (userId == null) return RedirectToAction("Index", "Account");
 
-            var model = new CashInViewModel { UserId = userId.Value };
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId.Value);
+            if (user == null) return NotFound();
+
+            var model = new CashInViewModel
+            {
+                UserId = userId.Value,
+                CurrentBalance = user.Balance    // ← reads from DB, not session
+            };
             return View(model);
         }
 
@@ -180,8 +190,8 @@ namespace Evently.Controllers
             user.Balance += model.Amount;
 
             await _db.SaveChangesAsync();
-
-            TempData["Succes"] = $"Succesfully cashed in Php{model.Amount:C2}!";
+            HttpContext.Session.SetString("UserBalance", user.Balance.ToString("N2"));
+            TempData["Success"] = $"Succesfully cashed in Php{model.Amount:C2}!";
             return RedirectToAction("Index");
         }
     }

@@ -15,6 +15,7 @@ namespace Evently.Models
         public List<EventHistoryItem> EventHistory { get; set; } = new();
 
         public decimal Balance { get; set; }
+        public string? ImageUrl { get; set; }
     }
 
     public class EventHistoryItem

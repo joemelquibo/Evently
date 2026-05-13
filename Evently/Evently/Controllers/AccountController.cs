@@ -65,6 +65,7 @@ namespace Evently.Controllers
             HttpContext.Session.SetInt32("UserId", user.UserId);
             HttpContext.Session.SetString("UserName", user.FirstName);
             HttpContext.Session.SetString("UserRole", user.Role.Role.ToString());
+            HttpContext.Session.SetString("UserBalance", user.Balance.ToString("N2"));
 
             if (user.Role.Role.ToString() == "Admin" || user.Role.Role.ToString() == "Organizer")
             {

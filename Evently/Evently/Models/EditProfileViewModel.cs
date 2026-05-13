@@ -24,5 +24,6 @@ namespace Evently.Models
         public string Phone { get; set; } = "";
 
         public IFormFile? ProfileImage { get; set; }
+        public string? CurrentImageUrl { get; set; }
     }
 }

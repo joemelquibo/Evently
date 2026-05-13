@@ -27,10 +27,14 @@
                     </div>
                     <div class="col-md-4">
                         <div class="p-3 rounded-3" style="background-color: #f3f0ff;">
-                            <p class="mb-2"><strong>📅 Date:</strong> @Model.EventDate.ToString("MMM dd, yyyy")</p>
-                            <p class="mb-2"><strong>🕒 Time:</strong> @Model.StartTime to @Model.EndTime</p>
-                            <p class="mb-0"><strong>👥 Capacity:</strong> @Model.Capacity max</p>
-                            <p class="mb-0"><strong>✅ Registered:</strong> @(ViewBag.RegCount ?? 0) joined</p>
+                            <p class="mb-2"><strong><i class="bi bi-calendar-event-fill me-1" style="color:#7c3aed;"></i> Date:</strong> @Model.EventDate.ToString("MMM dd, yyyy")</p>
+                            <p class="mb-2">
+                                <strong><i class="bi bi-clock-fill me-1" style="color:#7c3aed;"></i> Time:</strong>
+                                @(DateTime.Today.Add(Model.StartTime).ToString("h:mm tt")) to
+                                @(DateTime.Today.Add(Model.EndTime).ToString("h:mm tt"))
+                            </p>
+                            <p class="mb-0"><strong><i class="bi bi-people-fill me-1" style="color:#7c3aed;"></i> Capacity:</strong> @Model.Capacity max</p>
+                            <p class="mb-0"><strong><i class="bi bi-check-circle-fill me-1" style="color:#16a34a;"></i> Registered:</strong> @(ViewBag.RegCount ?? 0) joined</p>
                         </div>
 
                         @if (role == "Participant")

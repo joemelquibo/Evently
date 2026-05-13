@@ -7,51 +7,79 @@
     <div class="content-card">
 
         <div class="profile-banner">
-            <div class="avatar-wrapper">
-                <svg width="38" height="38" fill="currentColor" viewBox="0 0 24 24">
+
+            <!-- Clickable avatar — triggers file input -->
+            <div class="avatar-wrapper avatar-upload" onclick="document.getElementById('profileImageInput').click()" title="Click to change photo">
+
+                <img id="avatarPreview"
+                     src="@(string.IsNullOrEmpty(Model.CurrentImageUrl) ? "" : Model.CurrentImageUrl)"
+                     alt="Profile"
+                     class="avatar-img"
+                     style="@(string.IsNullOrEmpty(Model.CurrentImageUrl) ? "display:none;" : "")" />
+
+                @* Fallback SVG shown when no image *@
+                <svg id="avatarFallback" width="38" height="38" fill="currentColor" viewBox="0 0 24 24"
+                     style="@(!string.IsNullOrEmpty(Model.CurrentImageUrl) ? "display:none;" : "")">
                     <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4
                              7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6
                              1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
                 </svg>
+
+                <!-- Camera overlay -->
+                <div class="avatar-overlay">
+                    <i class="bi bi-camera-fill"></i>
+                </div>
+
+                <div class="avatar-edit-badge">
+                    <i class="bi bi-pencil-fill"></i>
+                </div>
+
             </div>
+
             <div class="profile-info">
                 <h2>Edit Profile</h2>
+                <div class="email" style="font-size:0.82rem; opacity:0.8;">
+                    Click the avatar to change your photo
+                </div>
             </div>
         </div>
 
-        <form asp-action="Edit" asp-controller="Profile" method="post">
+        <form asp-action="Edit" asp-controller="Profile" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="UserId" />
+
+            @* Hidden file input — triggered by clicking the avatar *@
+            <input type="file"
+                   id="profileImageInput"
+                   asp-for="ProfileImage"
+                   accept="image/*"
+                   style="display:none;"
+                   onchange="previewImage(event)" />
 
             <div asp-validation-summary="ModelOnly" class="alert-error"></div>
 
             <div class="form-section">
                 <div class="form-grid">
-
                     <div class="form-group">
                         <label asp-for="FirstName"></label>
                         <input asp-for="FirstName" type="text" />
                         <span asp-validation-for="FirstName" class="field-error"></span>
                     </div>
-
                     <div class="form-group">
                         <label asp-for="LastName"></label>
                         <input asp-for="LastName" type="text" />
                         <span asp-validation-for="LastName" class="field-error"></span>
                     </div>
-
                     <div class="form-group">
                         <label asp-for="Email"></label>
                         <input asp-for="Email" type="email" />
                         <span asp-validation-for="Email" class="field-error"></span>
                     </div>
-
                     <div class="form-group">
                         <label asp-for="Phone"></label>
                         <input asp-for="Phone" type="text" />
                         <span asp-validation-for="Phone" class="field-error"></span>
                     </div>
-
                 </div>
             </div>
 
@@ -59,7 +87,6 @@
                 <a asp-action="Index" asp-controller="Profile" class="cancel-btn">Cancel</a>
                 <button type="submit" class="edit-profile-btn">Save Changes</button>
             </div>
-
         </form>
 
     </div>
@@ -73,4 +100,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = e => {
+                const preview  = document.getElementById('avatarPreview');
+                const fallback = document.getElementById('avatarFallback');
+
+                preview.src          = e.target.result;
+                preview.style.display  = 'block';
+                fallback.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
 }
