@@ -42,7 +42,7 @@
                 var role = Context.Session.GetString("UserRole");
             }
 
-            @if (role == "Admin" || role == "Organizer")
+            @if (role == "Organizer")
             {
                 <a asp-controller="Events" asp-action="Create" class="em-create-btn">
                     <i class="bi bi-plus-lg me-1"></i> Create Event
@@ -117,7 +117,7 @@
                             View Details
                         </a>
 
-                        @if (role == "Admin" || role == "Organizer")
+                        @if (role == "Admin")
                         {
                             <a asp-controller="Events"
                                asp-action="Edit"
@@ -148,7 +148,7 @@
             <div class="em-empty">
                 <h3>No events yet</h3>
 
-                @if (role == "Admin" || role == "Organizer")
+                @if (role == "Organizer")
                 {
                     <p>Create your first event.</p>
 

@@ -15,6 +15,7 @@ namespace Evently.Models
         public required string Password { get; set; }
         //[Compare("Password", ErrorMessage = "Password do not match")]
         //public required string ConfirmPassword { get; set; }
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Only numbers allowed")]
         public required string PhoneNum { get; set; }
 
         [Column("balance")]

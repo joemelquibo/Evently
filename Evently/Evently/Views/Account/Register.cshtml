@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Evently.Models.Users
+@{
     Layout = null;
 }
 
@@ -68,7 +69,7 @@
                     <input type="email" name="email" class="w3-input" placeholder="you@example.com" required>
 
                     <label class="label-text">Phone Number</label>
-                    <input type="text" name="phoneNum" class="w3-input" placeholder="+63 912 345 6789">
+                    <input type="text" name="phoneNum" pattern="\d{11}" class="w3-input" placeholder="0912 3456 789">
 
                     <div class="w3-row">
                         <div class="w3-half" style="padding-right:10px">
