@@ -69,7 +69,22 @@ namespace Evently.Controllers
             {
                 return RedirectToAction("Index", "Account");
             }
-            evt.UserId = userId.Value; //
+
+            // BALANCE Check logic
+            var user = _context.Users.Find(userId.Value);
+            if (user == null) return NotFound();
+
+            // Extract the Payment Amount from the form
+            decimal.TryParse(Request.Form["PayAmt"], out decimal payAmt);
+
+            // Validate if the user has enough balance
+            if (user.Balance < payAmt)
+            {
+                ModelState.AddModelError("", $"Insufficient balance. Your current balance is ₱{user.Balance:N2}.");
+                return View("~/Views/Home/Events/CreateEvent.cshtml", evt);
+            }
+
+            evt.UserId = userId.Value;
             evt.EventDate = DateTime.SpecifyKind(evt.EventDate, DateTimeKind.Utc);
             // Logic Validation
             if (evt.EndTime <= evt.StartTime)
@@ -77,7 +92,6 @@ namespace Evently.Controllers
                 ModelState.AddModelError("", "End time must be later than start time.");
             }
 
-            // Clean up Validation
             // Remove the 'User' navigation object from validation to prevent null-object errors
             ModelState.Remove("User");
 
@@ -86,21 +100,32 @@ namespace Evently.Controllers
                 return View("~/Views/Home/Events/CreateEvent.cshtml", evt);
             }
 
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                _context.Events.Add(evt);
-                _context.SaveChanges();
+                try
+                {
+                    // Subtracts the amount from the User's balance
+                    user.Balance -= payAmt;
+                    _context.Users.Update(user);
 
-                TempData["Success"] = "Event created successfully!";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex) // <--- You need the 'ex' here!
-            {
-                // This extracts the real database error so we can see it on the screen
-                var innerError = ex.InnerException?.Message ?? ex.Message;
-                ModelState.AddModelError("", "Database Error: " + innerError);
+                    _context.Events.Add(evt);
+                    _context.SaveChanges();
 
-                return View("~/Views/Home/Events/CreateEvent.cshtml", evt);
+                    // Commit transaction
+                    transaction.Commit();
+
+                    HttpContext.Session.SetString("UserBalance", user.Balance.ToString("N2"));
+
+                    TempData["Success"] = "Event created and balance updated!";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    var innerError = ex.InnerException?.Message ?? ex.Message;
+                    ModelState.AddModelError("", "Database Error: " + innerError);
+                    return View("~/Views/Home/Events/CreateEvent.cshtml", evt);
+                }
             }
         }
         
