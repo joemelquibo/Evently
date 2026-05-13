@@ -46,9 +46,16 @@
                 <a asp-action="Edit" asp-controller="Profile" class="edit-profile-btn">
                     Edit Profile
                 </a>
-                <a asp-action="CashIn" asp-controller="Profile" class="cash-in-btn">
-                    Cash In
-                </a>
+
+                @{
+                    var role = Context.Session.GetString("UserRole");
+                }
+                @if (role == "Organizer")
+                {
+                    <a asp-action="CashIn" asp-controller="Profile" class="cash-in-btn">
+                        Cash In
+                    </a>
+                }
             </div>
         </div>
 
